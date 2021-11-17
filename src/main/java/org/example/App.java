@@ -33,6 +33,14 @@ public class App
         System.out.println("List of all Vehicles:");
         vehicleManager.displayAllVehicles();
 
+        String reg = "151D987105";
+        Vehicle v = vehicleManager.findVehicleByRegistration(reg);
+        if (v != null)
+            System.out.println(v);
+        else
+            System.out.println("Vehicle not found");
+
+
         System.out.println("Program exiting... Goodbye");
     }
 }
