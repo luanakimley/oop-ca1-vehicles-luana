@@ -25,6 +25,22 @@ public class PassengerStore {
         }
     }
 
+    public void addPassenger(String name, String email, String phone, double latitude, double longitude) {
+        Passenger passenger = new Passenger(name, email, phone, latitude, longitude);
+        boolean found = false;
+
+        // test to see if Passenger already exists
+        for (Passenger p : passengerList) {
+            if (p.equals(passenger)) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+            passengerList.add(passenger);
+    }
+
     /**
      * Read Passenger records from a text file and create and add Passenger
      * objects to the PassengerStore.

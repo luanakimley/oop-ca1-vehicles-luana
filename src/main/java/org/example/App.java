@@ -30,17 +30,24 @@ public class App
         passengerStore.displayAllPassengers();
 
         VehicleManager vehicleManager = new VehicleManager("vehicles.txt");
-        System.out.println("List of all Vehicles:");
+        System.out.println("\nList of all Vehicles:");
         vehicleManager.displayAllVehicles();
 
         String reg = "151D987105";
         Vehicle v = vehicleManager.findVehicleByRegistration(reg);
         if (v != null)
-            System.out.println(v);
+            System.out.println("\nFound Vehicle: " + v);
         else
-            System.out.println("Vehicle not found");
+            System.out.println("\nVehicle not found");
+
+        // add Passenger that does not exist
+        passengerStore.addPassenger("Luana", "luana@gmail.com", "0830209226", 82823.48, 838383.98);
+        // add Passenger that already exists
+        passengerStore.addPassenger("Susan Boyle", "sboyle@gmail.com", "0827391827", 82823.48, 838383.98);
+        System.out.println("\nList of Passengers after adding:");
+        passengerStore.displayAllPassengers();
 
 
-        System.out.println("Program exiting... Goodbye");
+        System.out.println("\nProgram exiting... Goodbye");
     }
 }
