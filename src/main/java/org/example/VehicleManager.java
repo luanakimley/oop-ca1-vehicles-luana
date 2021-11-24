@@ -39,7 +39,7 @@ public class VehicleManager {
                 int mileage = sc.nextInt();
                 double latitude = sc.nextDouble();  // Depot GPS location
                 double longitude = sc.nextDouble();
-                int loadSpace = sc.nextInt();
+                int other = sc.nextInt(); // loadSpace for Van & numOfSeats for Car
 
                 if (type.equalsIgnoreCase("Van") ||
                         type.equalsIgnoreCase("Truck")) {
@@ -48,7 +48,7 @@ public class VehicleManager {
                             registration, costPerMile,
                             year, month, day,
                             mileage, latitude, longitude,
-                            loadSpace));
+                            other));
                 }
                 else if (type.equalsIgnoreCase("Car") ||
                         type.equalsIgnoreCase("4x4")) {
@@ -57,7 +57,7 @@ public class VehicleManager {
                             registration, costPerMile,
                             year, month, day,
                             mileage, latitude, longitude,
-                            loadSpace));
+                            other));
                 }
             }
             sc.close();
