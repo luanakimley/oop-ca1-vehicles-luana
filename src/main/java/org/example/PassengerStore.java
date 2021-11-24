@@ -76,7 +76,7 @@ public class PassengerStore {
 
     // Edit Methods
 
-    public void editPassengerName (String email,String name ) {
+    public void editPassengerName (String email, String name) {
         for (Passenger p : passengerList) {
             if (p != null && p.getEmail().equalsIgnoreCase(email))
             {
@@ -87,10 +87,16 @@ public class PassengerStore {
 
     public void editPassengerEmail (String email, String newEmail) {
         for (Passenger p : passengerList) {
-            if (p != null && p.getEmail().equalsIgnoreCase(email))
+            if (p.getEmail().equalsIgnoreCase(newEmail))
+            {
+                break;
+            }
+
+            if (p.getEmail().equalsIgnoreCase(email))
             {
                 p.setEmail(newEmail);
             }
+
         }
     }
 
@@ -137,6 +143,36 @@ public class PassengerStore {
 
     public void deletePassengerByLocation(double latitude, double longitude) {
         passengerList.removeIf(p -> p.getLocation().getLatitude() == latitude && p.getLocation().getLongitude() == longitude);
+    }
+
+    // Print Methods
+
+    public void displayPassengerByName(String name) {
+        for (Passenger p : this.passengerList) {
+            if (p.getName().equalsIgnoreCase(name))
+                System.out.println(p);
+        }
+    }
+
+    public void displayPassengerByEmail(String email) {
+        for (Passenger p : this.passengerList) {
+            if (p.getEmail().equalsIgnoreCase(email))
+                System.out.println(p);
+        }
+    }
+
+    public void displayPassengerByPhone(String phone) {
+        for (Passenger p : this.passengerList) {
+            if (p.getPhone().equalsIgnoreCase(phone))
+                System.out.println(p);
+        }
+    }
+
+    public void displayPassengerByLocation(double latitude, double longitude) {
+        for (Passenger p : this.passengerList) {
+            if (p.getLocation().getLatitude() == latitude && p.getLocation().getLongitude() == longitude)
+                System.out.println(p);
+        }
     }
 
 
