@@ -105,7 +105,7 @@ public abstract class Vehicle
         this.costPerMile = costPerMile;
     }
     public LocalDate getLastServicedDate() { return lastServicedDate; }
-    public void setLastServicedDate(LocalDate lastServicedDate) { this.lastServicedDate = lastServicedDate; }
+    public void setLastServicedDate(int year, int month, int day) { this.lastServicedDate = LocalDate.of(year, month, day); }
     public int getMileage()
     {
         return mileage;
