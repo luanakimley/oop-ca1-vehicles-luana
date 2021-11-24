@@ -45,6 +45,6 @@ public class Car extends Vehicle {
     public String toString() {
         return "Car{" +
                 "numOfSeats=" + numOfSeats +
-                "}" + super.toString();
+                "} " + super.toString();
     }
 }
