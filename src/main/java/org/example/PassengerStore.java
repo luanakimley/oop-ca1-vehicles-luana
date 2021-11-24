@@ -3,6 +3,7 @@ package org.example;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -72,6 +73,9 @@ public class PassengerStore {
     }
 
     // TODO - see functional spec for details of code to add
+
+    // Edit Methods
+
     public void editPassengerName (String email,String name ) {
         for (Passenger p : passengerList) {
             if (p != null && p.getEmail().equalsIgnoreCase(email))
@@ -81,7 +85,7 @@ public class PassengerStore {
         }
     }
 
-    public void editPassengerEmail (String email,String newEmail ) {
+    public void editPassengerEmail (String email, String newEmail) {
         for (Passenger p : passengerList) {
             if (p != null && p.getEmail().equalsIgnoreCase(email))
             {
@@ -106,6 +110,33 @@ public class PassengerStore {
                 p.setLocation(latitude, longitude);
             }
         }
+    }
+
+    // Delete Methods
+
+    public void deleteAllPassengers() {
+        Iterator<Passenger> it = passengerList.iterator();
+        while (it.hasNext())
+        {
+            it.next();
+            it.remove();
+        }
+    }
+
+    public void deletePassengerByName(String name) {
+        passengerList.removeIf(p -> p.getName().equalsIgnoreCase(name));
+    }
+
+    public void deletePassengerByEmail(String email) {
+        passengerList.removeIf(p -> p.getEmail().equalsIgnoreCase(email));
+    }
+
+    public void deletePassengerByPhone(String phone) {
+        passengerList.removeIf(p -> p.getPhone().equalsIgnoreCase(phone));
+    }
+
+    public void deletePassengerByLocation(double latitude, double longitude) {
+        passengerList.removeIf(p -> p.getLocation().getLatitude() == latitude && p.getLocation().getLongitude() == longitude);
     }
 
 
