@@ -43,8 +43,17 @@ public class VehicleManager {
 
                 if (type.equalsIgnoreCase("Van") ||
                         type.equalsIgnoreCase("Truck")) {
-                    // construct a Van object and add it to the passenger list
+                    // construct a Van object and add it to the vehicle list
                     vehicleList.add(new Van(id, type, make, model, milesPerKwH,
+                            registration, costPerMile,
+                            year, month, day,
+                            mileage, latitude, longitude,
+                            loadSpace));
+                }
+                else if (type.equalsIgnoreCase("Car") ||
+                        type.equalsIgnoreCase("4x4")) {
+                    // construct a Car object and add it to the vehicle list
+                    vehicleList.add(new Car(id, type, make, model, milesPerKwH,
                             registration, costPerMile,
                             year, month, day,
                             mileage, latitude, longitude,
