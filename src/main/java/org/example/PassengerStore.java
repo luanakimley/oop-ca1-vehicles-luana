@@ -72,5 +72,43 @@ public class PassengerStore {
     }
 
     // TODO - see functional spec for details of code to add
+    public void editPassengerName (String email,String name ) {
+        for (Passenger p : passengerList) {
+            if (p != null && p.getEmail().equalsIgnoreCase(email))
+            {
+                p.setName(name);
+            }
+        }
+    }
+
+    public void editPassengerEmail (String email,String newEmail ) {
+        for (Passenger p : passengerList) {
+            if (p != null && p.getEmail().equalsIgnoreCase(email))
+            {
+                p.setEmail(newEmail);
+            }
+        }
+    }
+
+    public void editPassengerPhone (String email,String phone) {
+        for (Passenger p : passengerList) {
+            if (p != null && p.getEmail().equalsIgnoreCase(email))
+            {
+                p.setEmail(phone);
+            }
+        }
+    }
+
+    public void editPassengerLocation (String email, double latitude, double longitude) {
+        for (Passenger p : passengerList) {
+            if (p != null && p.getEmail().equalsIgnoreCase(email))
+            {
+                p.setLocation(latitude, longitude);
+            }
+        }
+    }
+
+
+
 
 } // end class
