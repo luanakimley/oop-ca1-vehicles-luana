@@ -19,6 +19,8 @@ public class VehicleManager {
     }
 
     public void loadVehiclesFromFile(String fileName) {
+        double loadSpace = 0;
+        int numOfSeats = 0;
         try {
             Scanner sc = new Scanner(new File(fileName));
 //           Delimiter: set the delimiter to be a comma character ","
@@ -39,7 +41,15 @@ public class VehicleManager {
                 int mileage = sc.nextInt();
                 double latitude = sc.nextDouble();  // Depot GPS location
                 double longitude = sc.nextDouble();
-                int other = sc.nextInt(); // loadSpace for Van & numOfSeats for Car
+
+                if (type.equalsIgnoreCase("Van") ||
+                        type.equalsIgnoreCase("Truck")) {
+                    loadSpace = sc.nextDouble();
+                }
+                else {
+                    numOfSeats = sc.nextInt();
+                }
+
 
                 if (type.equalsIgnoreCase("Van") ||
                         type.equalsIgnoreCase("Truck")) {
@@ -48,7 +58,7 @@ public class VehicleManager {
                             registration, costPerMile,
                             year, month, day,
                             mileage, latitude, longitude,
-                            other));
+                            loadSpace));
                 }
                 else if (type.equalsIgnoreCase("Car") ||
                         type.equalsIgnoreCase("4x4")) {
@@ -57,7 +67,7 @@ public class VehicleManager {
                             registration, costPerMile,
                             year, month, day,
                             mileage, latitude, longitude,
-                            other));
+                            numOfSeats));
                 }
             }
             sc.close();
