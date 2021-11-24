@@ -13,6 +13,34 @@ class Booking
 
     private double cost;  //Calculated at booking time
 
+    private IdGenerator idGenerator = IdGenerator.getInstance("next-id-store.txt");  // get access to the id Generator
+
+    public Booking(int passengerId, int vehicleId, int year, int month,
+                   int day, int hour, int minute, int second,
+                   double startLocationLatitude, double startLocationLongitude, double endLocationLatitude, double endLocationLongitude) {
+
+        this.bookingId = idGenerator.getNextId();
+        this.passengerId = passengerId;
+        this.vehicleId = vehicleId;
+        this.bookingDateTime = LocalDateTime.of(year, month, day, hour, minute, second);
+        this.startLocation = new LocationGPS(startLocationLatitude, startLocationLongitude);
+        this.endLocation = new LocationGPS(endLocationLatitude, endLocationLongitude);
+
+    }
+
+    public Booking(int bookingId, int passengerId, int vehicleId, int year, int month,
+                   int day, int hour, int minute, int second,
+                   double startLocationLatitude, double startLocationLongitude, double endLocationLatitude, double endLocationLongitude) {
+
+        this.bookingId = bookingId;
+        this.passengerId = passengerId;
+        this.vehicleId = vehicleId;
+        this.bookingDateTime = LocalDateTime.of(year, month, day, hour, minute, second);
+        this.startLocation = new LocationGPS(startLocationLatitude, startLocationLongitude);
+        this.endLocation = new LocationGPS(endLocationLatitude, endLocationLongitude);
+
+    }
+
     public int getBookingId()
     {
         return bookingId;
@@ -48,9 +76,9 @@ class Booking
         return bookingDateTime;
     }
 
-    public void setBookingDateTime(LocalDateTime bookingDateTime)
+    public void setBookingDateTime(int year, int month, int day, int hour, int minute, int second)
     {
-        this.bookingDateTime = bookingDateTime;
+        this.bookingDateTime = LocalDateTime.of(year, month, day, hour, minute, second);
     }
 
     public LocationGPS getStartLocation()
@@ -58,9 +86,9 @@ class Booking
         return startLocation;
     }
 
-    public void setStartLocation(LocationGPS startLocation)
+    public void setStartLocation(double latitude, double longitude)
     {
-        this.startLocation = startLocation;
+        this.startLocation = new LocationGPS(latitude, longitude);
     }
 
     public LocationGPS getEndLocation()
@@ -68,9 +96,9 @@ class Booking
         return endLocation;
     }
 
-    public void setEndLocation(LocationGPS endLocation)
+    public void setEndLocation(double latitude, double longitude)
     {
-        this.endLocation = endLocation;
+        this.endLocation = new LocationGPS(latitude, longitude);
     }
 
     public double getCost()
@@ -78,11 +106,21 @@ class Booking
         return cost;
     }
 
-    public void setCost(double cost)
+
+    //TODO: see specification
+
+
+    @Override
+    public String toString()
     {
-        this.cost = cost;
+        return "Booking{" +
+                "bookingId=" + bookingId +
+                ", passengerId=" + passengerId +
+                ", vehicleId=" + vehicleId +
+                ", bookingDateTime=" + bookingDateTime +
+                ", startLocation=" + startLocation +
+                ", endLocation=" + endLocation +
+                ", cost=" + cost +
+                '}';
     }
-
-    //TODO - see specification
-
 }
