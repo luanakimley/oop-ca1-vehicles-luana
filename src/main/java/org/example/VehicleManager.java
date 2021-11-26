@@ -79,6 +79,12 @@ public class VehicleManager {
 
     //TODO add more functionality as per spec.
 
+
+    public ArrayList<Vehicle> findAllVehicles()
+    {
+        return vehicleList;
+    }
+
     public Vehicle findVehicleByRegistration(String reg) {
         for (Vehicle v : vehicleList) {
             if(v.getRegistration().equalsIgnoreCase(reg))
@@ -87,4 +93,15 @@ public class VehicleManager {
         return null;
     }
 
+    public ArrayList<Vehicle> findVehiclesByType(String type)
+    {
+        ArrayList<Vehicle> list = new ArrayList<>();
+
+        for (Vehicle v : vehicleList) {
+            if (v.getType().equalsIgnoreCase(type))
+                list.add(v);
+        }
+
+        return list;
+    }
 }
