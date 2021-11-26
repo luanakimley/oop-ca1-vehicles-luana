@@ -74,7 +74,27 @@ public class PassengerStore {
 
     // TODO - see functional spec for details of code to add
 
+    public Passenger findPassengerByName(String name) {
+        for (Passenger p : passengerList) {
+            if(p.getName().equalsIgnoreCase(name))
+                return p;
+        }
+        return null;
+    }
+
     // Edit Methods
+
+    public void editAllPassengerDetails(String email, String name, String newEmail, String phone,
+                                        double latitude, double longitude) {
+        for (Passenger p : passengerList) {
+            if (p != null && p.getEmail().equalsIgnoreCase(email)) {
+                p.setName(name);
+                p.setEmail(newEmail);
+                p.setPhone(phone);
+                p.setLocation(latitude, longitude);
+            }
+        }
+    }
 
     public void editPassengerName (String email, String name) {
         for (Passenger p : passengerList) {
@@ -148,28 +168,28 @@ public class PassengerStore {
     // Print Methods
 
     public void displayPassengerByName(String name) {
-        for (Passenger p : this.passengerList) {
+        for (Passenger p : passengerList) {
             if (p.getName().equalsIgnoreCase(name))
                 System.out.println(p);
         }
     }
 
     public void displayPassengerByEmail(String email) {
-        for (Passenger p : this.passengerList) {
+        for (Passenger p : passengerList) {
             if (p.getEmail().equalsIgnoreCase(email))
                 System.out.println(p);
         }
     }
 
     public void displayPassengerByPhone(String phone) {
-        for (Passenger p : this.passengerList) {
+        for (Passenger p : passengerList) {
             if (p.getPhone().equalsIgnoreCase(phone))
                 System.out.println(p);
         }
     }
 
     public void displayPassengerByLocation(double latitude, double longitude) {
-        for (Passenger p : this.passengerList) {
+        for (Passenger p : passengerList) {
             if (p.getLocation().getLatitude() == latitude && p.getLocation().getLongitude() == longitude)
                 System.out.println(p);
         }
