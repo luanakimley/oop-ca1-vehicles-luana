@@ -47,6 +47,27 @@ public class App
         System.out.println("\nList of Passengers after adding:");
         passengerStore.displayAllPassengers();
 
+        System.out.println();
+        passengerStore.editPassengerName("luana@gmail.com", "Luana Kimley");
+        System.out.println("List of passengers after editing:");
+        passengerStore.displayAllPassengers();
+
+        System.out.println();
+        passengerStore.deletePassengerByLocation(53.5656, -7.0012);
+        System.out.println("List of passengers after deleting:");
+        passengerStore.displayAllPassengers();
+
+        System.out.println();
+        passengerStore.displayPassengerByLocation(82823.48, 838383.98);
+        passengerStore.displayPassengerByName("Susan Boyle");
+
+        BookingManager bookingManager = new BookingManager("bookings.txt");
+        System.out.println("\nList of all bookings:");
+        bookingManager.displayAllBookings();
+
+        System.out.println("\nList of bookings after edit");
+        //bookingManager.editStartLocation(101,105, 1.5, 1.5);
+        bookingManager.displayAllBookings();
 
         System.out.println("\nProgram exiting... Goodbye");
     }

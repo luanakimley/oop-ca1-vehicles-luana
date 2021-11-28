@@ -110,12 +110,14 @@ public class MenuStarter
         final String MENU_ITEMS = "\n*** PASSENGER MENU ***\n"
                 + "1. Show all Passengers\n"
                 + "2. Find Passenger by Name\n"
-                + "3. Exit\n"
-                + "Enter Option [1,3]";
+                + "3. Add passenger\n"
+                + "4. Exit\n"
+                + "Enter Option [1,4]";
 
         final int SHOW_ALL_PASSENGER = 1;
         final int FIND_BY_NAME = 2;
-        final int EXIT = 3;
+        final int ADD_PASSENGER = 3;
+        final int EXIT = 4;
 
         Scanner keyboard = new Scanner(System.in);
         int option = 0;
@@ -141,6 +143,9 @@ public class MenuStarter
                             System.out.println("No passenger matching the name \"" + name + "\"");
                         else
                             System.out.println("Found passenger: \n" + p);
+                        break;
+                    case ADD_PASSENGER:
+                        addPassengerOption();
                         break;
                     case EXIT:
                         System.out.println("Exit Menu option chosen");
@@ -229,6 +234,32 @@ public class MenuStarter
             }
         } while (option != EXIT);
 
+
+    }
+
+    private void addPassengerOption() {
+        Scanner keyboard = new Scanner(System.in);
+
+        System.out.println("\nAdding new passenger");
+
+        System.out.println("Enter passenger name:");
+        String name = keyboard.nextLine();
+
+        System.out.println("Enter passenger email:");
+        String email = keyboard.nextLine();
+
+        System.out.println("Enter passenger phone:");
+        String phone = keyboard.nextLine();
+
+        System.out.println("Enter home location latitude:");
+        double latitude = keyboard.nextDouble();
+
+        System.out.println("Enter home location longitude:");
+        double longitude = keyboard.nextDouble();
+
+        passengerStore.addPassenger(name, email, phone, latitude, longitude);
+
+        System.out.println("Passenger added to the system");
     }
 
 
