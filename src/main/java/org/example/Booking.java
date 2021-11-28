@@ -87,9 +87,9 @@ class Booking
         return startLocation;
     }
 
-    public void setStartLocation(double latitude, double longitude)
+    public void setStartLocation(double startLatitude, double startLongitude)
     {
-        this.startLocation = new LocationGPS(latitude, longitude);
+        this.startLocation = new LocationGPS(startLatitude, startLongitude);
     }
 
     public LocationGPS getEndLocation()
@@ -97,9 +97,9 @@ class Booking
         return endLocation;
     }
 
-    public void setEndLocation(double latitude, double longitude)
+    public void setEndLocation(double endLatitude, double endLongitude)
     {
-        this.endLocation = new LocationGPS(latitude, longitude);
+        this.endLocation = new LocationGPS(endLatitude, endLongitude);
     }
 
     public double getCost()

@@ -11,6 +11,8 @@ public class MenuStarter
     PassengerStore passengerStore;  // encapsulates access to list of Passengers
     VehicleManager vehicleManager;  // encapsulates access to list of Vehicles
     BookingManager bookingManager;  // deals with all bookings
+
+    // Comparators
     VehicleRegistrationComparator vehicleRegistrationComparator;
 
     public static void main(String[] args)
@@ -27,6 +29,9 @@ public class MenuStarter
         // create VehicleManager, and load all vehicles from text file
         vehicleManager = new VehicleManager("vehicles.txt");
 
+        // Create BookingManager and load all bookings from file
+        bookingManager = new BookingManager("bookings.txt");
+
         // comparators
         vehicleRegistrationComparator = new VehicleRegistrationComparator();
 
@@ -40,8 +45,7 @@ public class MenuStarter
 
 
 
-        // Create BookingManager and load all bookings from file
-        // bookingManager = new BookingManager("bookings.txt");
+
 
         //pMgr.saveToFile();
 
@@ -84,6 +88,7 @@ public class MenuStarter
                         break;
                     case BOOKINGS:
                         System.out.println("Bookings option chosen");
+                        displayBookingMenu();
                         break;
                     case EXIT:
                         System.out.println("Exit Menu option chosen");
@@ -163,6 +168,8 @@ public class MenuStarter
 
     }
 
+    // Sub-Menu for Vehicle operations
+    //
     private void displayVehicleMenu()
     {
         final String MENU_ITEMS = "\n*** VEHICLE MENU ***\n"
@@ -219,6 +226,56 @@ public class MenuStarter
                             for (Vehicle vehicle : vList)
                                 System.out.println(vehicle);
                         }
+                        break;
+                    case EXIT:
+                        System.out.println("Exit Menu option chosen");
+                        break;
+                    default:
+                        System.out.print("Invalid option - please enter number in range");
+                        break;
+                }
+
+            } catch (InputMismatchException | NumberFormatException e)
+            {
+                System.out.print("Invalid option - please enter number in range");
+            }
+        } while (option != EXIT);
+
+
+    }
+
+    // Sub-Menu for Booking operations
+    //
+    private void displayBookingMenu()
+    {
+        final String MENU_ITEMS = "\n*** BOOKING MENU ***\n"
+                + "1. Show all Bookings\n"
+                + "2. Show current Bookings\n"
+                + "3. Exit\n"
+                + "Enter Option [1,3]";
+
+        final int SHOW_ALL_BOOKING = 1;
+        final int SHOW_CURRENT_BOOKING = 2;
+        final int EXIT = 3;
+
+        Scanner keyboard = new Scanner(System.in);
+        int option = 0;
+        do
+        {
+            System.out.println("\n" + MENU_ITEMS);
+            try
+            {
+                String usersInput = keyboard.nextLine();
+                option = Integer.parseInt(usersInput);
+                switch (option)
+                {
+                    case SHOW_ALL_BOOKING:
+                        System.out.println("Display ALL Bookings");
+                        bookingManager.displayAllBookings();
+                        break;
+                    case SHOW_CURRENT_BOOKING:
+                        System.out.println("Display Current Bookings");
+                        bookingManager.displayCurrentBookings();
                         break;
                     case EXIT:
                         System.out.println("Exit Menu option chosen");
