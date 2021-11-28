@@ -83,5 +83,11 @@ public class BookingManager
 
 
     //TODO implement functionality as per specification
+    public void displayCurrentBookings() {
+        for (Booking b : bookingList) {
+            if (b.getBookingDateTime().isAfter(LocalDateTime.now()))
+                System.out.println(b);
+        }
+    }
 
 }
