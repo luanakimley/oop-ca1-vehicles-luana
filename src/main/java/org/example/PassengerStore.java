@@ -1,7 +1,9 @@
 package org.example;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -74,6 +76,25 @@ public class PassengerStore {
 
     // TODO - see functional spec for details of code to add
 
+    /**
+     * Write Passenger records to text file
+     */
+    public void savePassengerDataToFile(String fileName)
+    {
+        try
+        {
+            PrintWriter out = new PrintWriter(fileName);
+            for (Passenger p : passengerList) {
+                out.println(p.getId()+","+p.getName()+","+p.getEmail()+","+p.getPhone()+","+p.getLocation().getLatitude()+","+p.getLocation().getLongitude());
+            }
+            out.close();
+        }
+        catch (FileNotFoundException exception) {
+            System.out.println("FileNotFoundException caught." + exception);
+            exception.printStackTrace();
+        }
+    }
+
     public Passenger findPassengerByName(String name) {
         for (Passenger p : passengerList) {
             if(p.getName().equalsIgnoreCase(name))
@@ -81,6 +102,15 @@ public class PassengerStore {
         }
         return null;
     }
+
+    public Passenger findPassengerById(int id) {
+        for (Passenger p : passengerList) {
+            if(p.getId() == id)
+                return p;
+        }
+        return null;
+    }
+
 
     // Edit Methods
 
@@ -138,32 +168,12 @@ public class PassengerStore {
         }
     }
 
-    // Delete Methods
+    // Delete Method
 
-    public void deleteAllPassengers() {
-        Iterator<Passenger> it = passengerList.iterator();
-        while (it.hasNext())
-        {
-            it.next();
-            it.remove();
-        }
+    public void deletePassenger(int id) {
+        passengerList.removeIf(p -> p.equals(findPassengerById(id)));
     }
 
-    public void deletePassengerByName(String name) {
-        passengerList.removeIf(p -> p.getName().equalsIgnoreCase(name));
-    }
-
-    public void deletePassengerByEmail(String email) {
-        passengerList.removeIf(p -> p.getEmail().equalsIgnoreCase(email));
-    }
-
-    public void deletePassengerByPhone(String phone) {
-        passengerList.removeIf(p -> p.getPhone().equalsIgnoreCase(phone));
-    }
-
-    public void deletePassengerByLocation(double latitude, double longitude) {
-        passengerList.removeIf(p -> p.getLocation().getLatitude() == latitude && p.getLocation().getLongitude() == longitude);
-    }
 
     // Print Methods
 
