@@ -79,6 +79,13 @@ public class VehicleManager {
 
     //TODO add more functionality as per spec.
 
+    public Vehicle findVehicleById(int id) {
+        for (Vehicle v : vehicleList) {
+            if (v.getId() == id)
+                return v;
+        }
+        return null;
+    }
 
     public ArrayList<Vehicle> findAllVehicles()
     {
