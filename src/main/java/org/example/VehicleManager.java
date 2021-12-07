@@ -111,4 +111,17 @@ public class VehicleManager {
 
         return list;
     }
+
+    public ArrayList<Vehicle> findVehiclesByNumOfSeats(int numOfSeats) {
+        ArrayList<Vehicle> list = new ArrayList<>();
+
+        for (Vehicle v : vehicleList) {
+            if (v instanceof Car) {
+                if (((Car) v).getNumOfSeats() == numOfSeats)
+                   list.add(v);
+            }
+        }
+
+        return list;
+    }
 }
