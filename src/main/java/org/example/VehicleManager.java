@@ -18,6 +18,12 @@ public class VehicleManager {
             System.out.println(v.toString());
     }
 
+
+    public ArrayList<Vehicle> getVehicleList()
+    {
+        return vehicleList;
+    }
+
     public void loadVehiclesFromFile(String fileName) {
         double loadSpace = 0;
         int numOfSeats = 0;
