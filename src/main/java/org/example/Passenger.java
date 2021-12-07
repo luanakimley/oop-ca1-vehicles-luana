@@ -91,7 +91,7 @@ public class Passenger {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Passenger passenger = (Passenger) o;
-        return name.equals(passenger.name) && email.equals(passenger.email);
+        return name.equalsIgnoreCase(passenger.name) && email.equalsIgnoreCase(passenger.email);
     }
 
     @Override
