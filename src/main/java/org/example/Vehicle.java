@@ -1,6 +1,7 @@
 package org.example;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public abstract class Vehicle
 {
@@ -16,6 +17,21 @@ public abstract class Vehicle
     private LocalDate lastServicedDate;
     private int mileage; // mileage recorded at last service
     private LocationGPS depotGPSLocation;
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vehicle vehicle = (Vehicle) o;
+        return registration.equals(vehicle.registration);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(registration);
+    }
 
     // Constructor called when a new Vehicle is being created.
     // No vehicle id is passed in as an argument,
@@ -62,7 +78,7 @@ public abstract class Vehicle
     public int getId() {
         return id;
     }
-    private void setId() {}; // prevents the id from being set (as it should only come from autogenerator)
+    private void setId() {} // prevents the id from being set (as it should only come from autogenerator)
 
     public String getMake()
     {
