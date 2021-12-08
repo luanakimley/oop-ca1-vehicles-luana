@@ -1,12 +1,15 @@
 package org.example;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class VehicleManager {
-    private final ArrayList<Vehicle> vehicleList;  // for Car and Van objects
+    private final List<Vehicle> vehicleList;  // for Car and Van objects
 
     public VehicleManager(String fileName) {
         this.vehicleList = new ArrayList<>();
@@ -19,7 +22,7 @@ public class VehicleManager {
     }
 
 
-    public ArrayList<Vehicle> getVehicleList()
+    public List<Vehicle> getVehicleList()
     {
         return vehicleList;
     }
@@ -85,6 +88,44 @@ public class VehicleManager {
 
     //TODO add more functionality as per spec.
 
+    /**
+     * Write Passenger records to text file
+     */
+    public void saveVehicleDataToFile(String fileName)
+    {
+        try
+        {
+            PrintWriter out = new PrintWriter(fileName);
+            for (Vehicle v : vehicleList) {
+                if (v.getType().equalsIgnoreCase("Car") || v.getType().equalsIgnoreCase("4x4"))
+                    out.println(v.getId()+","+v.getType()+","+v.getMake()+","
+                            + v.getModel()+","+v.getMilesPerKm()+","+v.getRegistration()+","
+                            + v.getCostPerMile()+","+v.getLastServicedDate().getYear()+","
+                            + v.getLastServicedDate().getMonthValue()+","+v.getLastServicedDate().getDayOfMonth()+","
+                            + v.getMileage()+","+v.getDepotGPSLocation().getLatitude()+","+v.getDepotGPSLocation().getLongitude()
+                            + "," + ((Car) v).getNumOfSeats());
+                else
+                    out.println(v.getId()+","+v.getType()+","+v.getMake()+","
+                            + v.getModel()+","+v.getMilesPerKm()+","+v.getRegistration()+","
+                            + v.getCostPerMile()+","+v.getLastServicedDate().getYear()+","
+                            + v.getLastServicedDate().getMonthValue()+","+v.getLastServicedDate().getDayOfMonth()+","
+                            + v.getMileage()+","+v.getDepotGPSLocation().getLatitude()+","+v.getDepotGPSLocation().getLongitude()
+                            +"," + ((Van) v).getLoadSpace());
+            }
+            out.close();
+        }
+        catch (FileNotFoundException exception) {
+            System.out.println("FileNotFoundException caught." + exception);
+            exception.printStackTrace();
+        }
+    }
+
+    public void displayAllVehicleIdTypeMakeModel() {
+        for (Vehicle v : vehicleList) {
+            System.out.println("ID: " + v.getId() + ", Type: " + v.getType() + ", Make: " + v.getMake() + ", Model: " + v.getModel());
+        }
+    }
+
     public Vehicle findVehicleById(int id) {
         for (Vehicle v : vehicleList) {
             if (v.getId() == id)
@@ -93,10 +134,8 @@ public class VehicleManager {
         return null;
     }
 
-    public ArrayList<Vehicle> findAllVehicles()
-    {
-        return vehicleList;
-    }
+
+
 
     public Vehicle findVehicleByRegistration(String reg) {
         for (Vehicle v : vehicleList) {
@@ -106,9 +145,9 @@ public class VehicleManager {
         return null;
     }
 
-    public ArrayList<Vehicle> findVehiclesByType(String type)
+    public List<Vehicle> findVehiclesByType(String type)
     {
-        ArrayList<Vehicle> list = new ArrayList<>();
+        List<Vehicle> list = new ArrayList<>();
 
         for (Vehicle v : vehicleList) {
             if (v.getType().equalsIgnoreCase(type))
@@ -118,8 +157,8 @@ public class VehicleManager {
         return list;
     }
 
-    public ArrayList<Vehicle> findVehiclesByNumOfSeats(int numOfSeats) {
-        ArrayList<Vehicle> list = new ArrayList<>();
+    public List<Vehicle> findVehiclesByNumOfSeats(int numOfSeats) {
+        List<Vehicle> list = new ArrayList<>();
 
         for (Vehicle v : vehicleList) {
             if (v instanceof Car) {
