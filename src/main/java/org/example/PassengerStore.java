@@ -8,7 +8,7 @@ import java.util.*;
 
 public class PassengerStore {
 
-    private final ArrayList<Passenger> passengerList;
+    private final List<Passenger> passengerList;
 
     // Comparators
     private final PassengerNameComparator passengerNameComparator = new PassengerNameComparator();
@@ -18,7 +18,7 @@ public class PassengerStore {
         loadPassengerDataFromFile(fileName);
     }
 
-    public ArrayList<Passenger> getAllPassengers() {
+    public List<Passenger> getAllPassengers() {
         return this.passengerList;
     }
 
@@ -34,7 +34,7 @@ public class PassengerStore {
                     p.getEmail(),
                     p.getPhone(),
                     p.getLocation().getLatitude(),
-                    p.getLocation().getLatitude()
+                    p.getLocation().getLongitude()
             );
         }
     }
@@ -132,61 +132,42 @@ public class PassengerStore {
         Passenger foundPassenger = findPassengerById(id);
         boolean duplicate = false;
 
-        for (Passenger p : passengerList)
-        {
-            if (p.equals(newPassenger))
-            {
-                duplicate = true;
-                break;
-            }
+        if (passengerList.contains(newPassenger)) {
+            duplicate = true;
+            System.out.println("Passenger not edited - passenger already exists in the system");
         }
-
         if (!duplicate) {
             foundPassenger.setName(name);
             foundPassenger.setEmail(email);
             foundPassenger.setPhone(phone);
             foundPassenger.setLocation(latitude, longitude);
+            System.out.println("Passenger edited.");
         }
 
 
     }
 
-    public void editPassengerName (int id, String name) {
-
+    public void editPassengerName(int id, String name) {
+        Passenger foundPassenger = findPassengerById(id);
+        foundPassenger.setName(name);
     }
+
 
     public void editPassengerEmail (int id, String email) {
-        for (Passenger p : passengerList) {
-            if (p.getEmail().equalsIgnoreCase(email))
-            {
-                break;
-            }
-
-            if (p.getId() == id)
-            {
-                p.setEmail(email);
-            }
-
-        }
+        Passenger foundPassenger = findPassengerById(id);
+        foundPassenger.setEmail(email);
     }
 
     public void editPassengerPhone (int id,String phone) {
-        for (Passenger p : passengerList) {
-            if (p != null && p.getEmail().equalsIgnoreCase(phone))
-            {
-                p.setEmail(phone);
-            }
-        }
+        Passenger foundPassenger = findPassengerById(id);
+        foundPassenger.setPhone(phone);
     }
 
-    public void editPassengerLocation (String email, double latitude, double longitude) {
-        for (Passenger p : passengerList) {
-            if (p != null && p.getEmail().equalsIgnoreCase(email))
-            {
-                p.setLocation(latitude, longitude);
-            }
-        }
+    public void editPassengerLocation (int id, double latitude, double longitude) {
+        Passenger foundPassenger = findPassengerById(id);
+        foundPassenger.setLocation(latitude, longitude);
     }
+
 
     // Delete Method
 
