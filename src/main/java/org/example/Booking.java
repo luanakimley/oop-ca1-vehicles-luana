@@ -13,34 +13,37 @@ class Booking implements Serializable
     private LocationGPS startLocation;
     private LocationGPS endLocation;
 
-    private double cost;  //Calculated at booking time
+    private double cost;  // Calculated at booking time
 
     private IdGenerator idGenerator = IdGenerator.getInstance("next-id-store.txt");  // get access to the id Generator
 
     public Booking(int passengerId, int vehicleId, int year, int month,
-                   int day, int hour, int minute, int second,
-                   double startLocationLatitude, double startLocationLongitude, double endLocationLatitude, double endLocationLongitude) {
+                   int day, int hour, int minute,
+                   double startLocationLatitude, double startLocationLongitude, double endLocationLatitude, double endLocationLongitude,
+                   double cost) {
 
         this.bookingId = idGenerator.getNextId();
         this.passengerId = passengerId;
         this.vehicleId = vehicleId;
-        this.bookingDateTime = LocalDateTime.of(year, month, day, hour, minute, second);
+        this.bookingDateTime = LocalDateTime.of(year, month, day, hour, minute);
         this.startLocation = new LocationGPS(startLocationLatitude, startLocationLongitude);
         this.endLocation = new LocationGPS(endLocationLatitude, endLocationLongitude);
+        this.cost = cost;
 
     }
 
     public Booking(int bookingId, int passengerId, int vehicleId, int year, int month,
-                   int day, int hour, int minute, int second,
-                   double startLocationLatitude, double startLocationLongitude, double endLocationLatitude, double endLocationLongitude) {
+                   int day, int hour, int minute,
+                   double startLocationLatitude, double startLocationLongitude, double endLocationLatitude, double endLocationLongitude,
+                   double cost) {
 
         this.bookingId = bookingId;
         this.passengerId = passengerId;
         this.vehicleId = vehicleId;
-        this.bookingDateTime = LocalDateTime.of(year, month, day, hour, minute, second);
+        this.bookingDateTime = LocalDateTime.of(year, month, day, hour, minute);
         this.startLocation = new LocationGPS(startLocationLatitude, startLocationLongitude);
         this.endLocation = new LocationGPS(endLocationLatitude, endLocationLongitude);
-
+        this.cost = cost;
     }
 
     public int getBookingId()
@@ -78,9 +81,9 @@ class Booking implements Serializable
         return bookingDateTime;
     }
 
-    public void setBookingDateTime(int year, int month, int day, int hour, int minute, int second)
+    public void setBookingDateTime(int year, int month, int day, int hour, int minute)
     {
-        this.bookingDateTime = LocalDateTime.of(year, month, day, hour, minute, second);
+        this.bookingDateTime = LocalDateTime.of(year, month, day, hour, minute);
     }
 
     public LocationGPS getStartLocation()
@@ -108,9 +111,10 @@ class Booking implements Serializable
         return cost;
     }
 
+    public void setCost(double cost) { this.cost = cost; }
+
 
     //TODO: see specification
-
 
     @Override
     public boolean equals(Object o)
@@ -118,13 +122,13 @@ class Booking implements Serializable
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Booking booking = (Booking) o;
-        return bookingId == booking.bookingId && passengerId == booking.passengerId && vehicleId == booking.vehicleId && Objects.equals(bookingDateTime, booking.bookingDateTime);
+        return passengerId == booking.passengerId && vehicleId == booking.vehicleId && Objects.equals(bookingDateTime, booking.bookingDateTime);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(bookingId, passengerId, vehicleId, bookingDateTime);
+        return Objects.hash(passengerId, vehicleId, bookingDateTime);
     }
 
     @Override
