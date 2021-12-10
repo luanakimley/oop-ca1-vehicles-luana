@@ -242,6 +242,29 @@ public class AppTest
         assertEquals(1180.55 , average, 0.01);
     }
 
+    @Test
+    public void deleteBookingByIdTest()
+    {
+        System.out.println("Delete Booking by ID Test");
+
+        int prevSize = bookingManager.getBookingList().size();
+
+        bookingManager.deleteBookingById(1001);
+
+        assertEquals(prevSize-1, bookingManager.getBookingList().size());
+    }
+
+    @Test
+    public void deletePassengerByIdTest()
+    {
+        System.out.println("Delete Passenger by ID Test");
+
+        int prevSize = passengerStore.getAllPassengers().size();
+
+        passengerStore.deletePassengerById(101);
+
+        assertEquals(prevSize-1, passengerStore.getAllPassengers().size());
+    }
 
 
 }
