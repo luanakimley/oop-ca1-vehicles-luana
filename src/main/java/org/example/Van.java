@@ -1,8 +1,10 @@
 package org.example;
 
+import java.io.Serializable;
+
 // Van class to represent Vans and Trucks
 //
-public class Van extends Vehicle
+public class Van extends Vehicle implements Serializable
 {
     private double loadSpace;   // measured in litres.  For Vans and Trucks
 

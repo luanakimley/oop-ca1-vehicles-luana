@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class BookingManager
+public class BookingManager implements Serializable
 {
     private final ArrayList<Booking> bookingList;
     private PassengerStore passengerStore;

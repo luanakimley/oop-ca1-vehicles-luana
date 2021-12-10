@@ -1,14 +1,12 @@
 package org.example;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class VehicleManager {
+public class VehicleManager implements Serializable
+{
     private final List<Vehicle> vehicleList;  // for Car and Van objects
 
     public VehicleManager(String fileName) {
@@ -18,7 +16,7 @@ public class VehicleManager {
 
     public void displayAllVehicles() {
         for (Vehicle v : vehicleList)
-            System.out.println(v.toString());
+            System.out.println(v);
     }
 
 
@@ -99,14 +97,14 @@ public class VehicleManager {
             for (Vehicle v : vehicleList) {
                 if (v.getType().equalsIgnoreCase("Car") || v.getType().equalsIgnoreCase("4x4"))
                     out.println(v.getId()+","+v.getType()+","+v.getMake()+","
-                            + v.getModel()+","+v.getMilesPerKm()+","+v.getRegistration()+","
+                            + v.getModel()+","+v.getMilesPerKwH()+","+v.getRegistration()+","
                             + v.getCostPerMile()+","+v.getLastServicedDate().getYear()+","
                             + v.getLastServicedDate().getMonthValue()+","+v.getLastServicedDate().getDayOfMonth()+","
                             + v.getMileage()+","+v.getDepotGPSLocation().getLatitude()+","+v.getDepotGPSLocation().getLongitude()
                             + "," + ((Car) v).getNumOfSeats());
                 else
                     out.println(v.getId()+","+v.getType()+","+v.getMake()+","
-                            + v.getModel()+","+v.getMilesPerKm()+","+v.getRegistration()+","
+                            + v.getModel()+","+v.getMilesPerKwH()+","+v.getRegistration()+","
                             + v.getCostPerMile()+","+v.getLastServicedDate().getYear()+","
                             + v.getLastServicedDate().getMonthValue()+","+v.getLastServicedDate().getDayOfMonth()+","
                             + v.getMileage()+","+v.getDepotGPSLocation().getLatitude()+","+v.getDepotGPSLocation().getLongitude()
@@ -125,6 +123,8 @@ public class VehicleManager {
             System.out.println("ID: " + v.getId() + ", Type: " + v.getType() + ", Make: " + v.getMake() + ", Model: " + v.getModel());
         }
     }
+
+
 
     public Vehicle findVehicleById(int id) {
         for (Vehicle v : vehicleList) {

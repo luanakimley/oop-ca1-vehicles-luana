@@ -1,9 +1,10 @@
 package org.example;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public abstract class Vehicle
+public abstract class Vehicle implements Serializable
 {
     private IdGenerator idGenerator = IdGenerator.getInstance("next-id-store.txt");  // get access to the id Generator
 
@@ -96,13 +97,13 @@ public abstract class Vehicle
     {
         this.model = model;
     }
-    public double getMilesPerKm()
+    public double getMilesPerKwH()
     {
         return milesPerKwH;
     }
-    public void setMilesPerKm(double milesPerKm)
+    public void setMilesPerKwH(double milesPerKwH)
     {
-        this.milesPerKwH = milesPerKm;
+        this.milesPerKwH = milesPerKwH;
     }
     public String getRegistration()
     {

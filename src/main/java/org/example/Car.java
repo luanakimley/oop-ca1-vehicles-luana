@@ -2,7 +2,8 @@ package org.example;
 
 // Car class to represent Cars and 4x4s
 //
-public class Car extends Vehicle {
+public class Car extends Vehicle implements Serializable
+{
 
     private int numOfSeats; // For Cars and 4x4s
 

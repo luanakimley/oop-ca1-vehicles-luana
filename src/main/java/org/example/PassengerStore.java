@@ -1,12 +1,10 @@
 package org.example;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 
-public class PassengerStore {
+public class PassengerStore implements Serializable
+{
 
     private final List<Passenger> passengerList;
 

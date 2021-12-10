@@ -1,9 +1,10 @@
 package org.example;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-class Booking
+class Booking implements Serializable
 {
     private int bookingId;
     private int passengerId;
