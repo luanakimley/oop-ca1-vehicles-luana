@@ -1,48 +1,93 @@
 package org.example;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class BookingManager implements Serializable
 {
-    private final ArrayList<Booking> bookingList;
-    private PassengerStore passengerStore;
-    private VehicleManager vehicleManager;
+    private final List<Booking> bookingList;
+    private final PassengerStore passengerStore;
+    private final VehicleManager vehicleManager;
+
+    // Comparators
+    private final BookingDateTimeComparator bookingDateTimeComparator = new BookingDateTimeComparator();
+
 
     // Constructor
-    public BookingManager(String fileName) {
+    public BookingManager(VehicleManager vehicleManager, PassengerStore passengerStore, String fileName) {
+        this.vehicleManager = vehicleManager;
+        this.passengerStore = passengerStore;
         this.bookingList = new ArrayList<>();
+
+
         loadBookingsFromFile(fileName);
     }
 
     public void displayAllBookings() {
+        System.out.printf("%-20s%-20s%-20s%-28s%-32s%-32s%-32s%-29s%-16s\n", "Booking ID",
+                "Passenger ID",
+                "Vehicle ID",
+                "Booking Date Time",
+                "Start Location Latitude",
+                "Start Location Longitude",
+                "End Location Latitude",
+                "End Location Longitude",
+                "Cost");
+        System.out.println("================    ================    ================    ========================    ============================    ============================    ============================    =========================    ===========");
+
         for (Booking b : bookingList) {
-            System.out.println(b.toString());
+            System.out.printf("%-20s%-20s%-20s%-28s%-32s%-32s%-32s%-29s%-10.2f\n",
+                    b.getBookingId(),
+                    b.getPassengerId(),
+                    b.getVehicleId(),
+                    b.getBookingDateTime(),
+                    b.getStartLocation().getLatitude(),
+                    b.getStartLocation().getLongitude(),
+                    b.getEndLocation().getLatitude(),
+                    b.getEndLocation().getLongitude(),
+                    b.getCost()
+            );
         }
     }
 
-    public void addBooking(int passengerId, int vehicleId, int year, int month,
-                           int day, int hour, int minute, int second,
+    public List<Booking> getBookingList() { return this.bookingList; }
+
+
+    public Booking makeBooking(int passengerId, int vehicleId, int year, int month,
+                           int day, int hour, int minute,
                            double startLocationLatitude, double startLocationLongitude, double endLocationLatitude, double endLocationLongitude) {
 
-        Booking booking = new Booking(passengerId, vehicleId, year, month, day, hour, minute, second, startLocationLatitude, startLocationLongitude, endLocationLatitude, endLocationLongitude);
-        boolean found = false;
 
-        // test to see if Booking already exists
-        for (Booking b : bookingList) {
-            if (b.equals(booking)) {
-                found = true;
-                break;
+        if (passengerStore.findPassengerById(passengerId) != null) {
+            if (findVehicleById(vehicleId) != null) {
+                if (checkAvailability(vehicleId, LocalDateTime.of(year, month, day, hour, minute))) {
+                    double cost = calculateCost(vehicleId, startLocationLatitude, startLocationLongitude, endLocationLatitude, endLocationLongitude);
+                    Booking newBooking = new Booking(passengerId, vehicleId, year, month, day, hour, minute, startLocationLatitude, startLocationLongitude, endLocationLatitude, endLocationLongitude, cost);
+                    bookingList.add(newBooking);
+                    return newBooking;
+                }
+                else {
+                    System.out.println("Booking unsuccessful - Vehicle not available");
+                }
+            }
+            else {
+                System.out.println("Booking unsuccessful - No such vehicle");
             }
         }
-
-        if (!found)
-            bookingList.add(booking);
+        else
+        {
+            System.out.println("Booking unsuccessful - No such passenger");
+        }
+        return null;
 
     }
+
+    public void addPassenger(String name, String email, String phone, double latitude, double longitude) {
+        passengerStore.addPassenger(name, email, phone, latitude, longitude);
+}
 
     /**
      * Read Bookings from a text file and create and add Booking
@@ -65,14 +110,14 @@ public class BookingManager implements Serializable
                 int day = sc.nextInt();
                 int hour = sc.nextInt();
                 int minute = sc.nextInt();
-                int second = sc.nextInt();
                 double startLocationLatitude = sc.nextDouble();
                 double startLocationLongitude = sc.nextDouble();
                 double endLocationLatitude = sc.nextDouble();
                 double endLocationLongitude = sc.nextDouble();
+                double cost = calculateCost(vehicleId, startLocationLatitude, startLocationLongitude, endLocationLatitude, endLocationLongitude);
 
                 // construct a Booking object and add it to the booking list
-                bookingList.add(new Booking(bookingId, passengerId, vehicleId, year, month, day, hour, minute, second, startLocationLatitude,startLocationLongitude, endLocationLatitude, endLocationLongitude));
+                bookingList.add(new Booking(bookingId, passengerId, vehicleId, year, month, day, hour, minute, startLocationLatitude,startLocationLongitude, endLocationLatitude, endLocationLongitude, cost));
             }
             sc.close();
 
@@ -81,13 +126,464 @@ public class BookingManager implements Serializable
         }
     }
 
-
-    //TODO implement functionality as per specification
-    public void displayCurrentBookings() {
-        for (Booking b : bookingList) {
-            if (b.getBookingDateTime().isAfter(LocalDateTime.now()))
-                System.out.println(b);
+    /**
+     * Write Passenger records to text file
+     */
+    public void saveBookingDataToFile(String fileName)
+    {
+        try
+        {
+            PrintWriter out = new PrintWriter(fileName);
+            for (Booking b : bookingList) {
+                out.println(b.getBookingId()+","+b.getPassengerId()+","+b.getVehicleId()+","
+                        +b.getBookingDateTime().getYear()+","+b.getBookingDateTime().getMonthValue()
+                        +","+b.getBookingDateTime().getDayOfMonth() +","
+                        +b.getBookingDateTime().getHour()+":"+b.getBookingDateTime().getMinute()
+                        +","+b.getStartLocation().getLatitude()+","+b.getStartLocation().getLongitude()
+                        +","+b.getEndLocation().getLatitude()+","+b.getEndLocation().getLongitude());
+            }
+            out.close();
+        }
+        catch (FileNotFoundException exception) {
+            System.out.println("FileNotFoundException caught." + exception);
+            exception.printStackTrace();
         }
     }
+
+
+    //TODO implement functionality as per specification
+    public List<Booking> findCurrentBookings() {
+        List<Booking> bookings = new ArrayList<>();
+        for (Booking b : bookingList) {
+            if (b.getBookingDateTime().isAfter(LocalDateTime.now())) {
+                bookings.add(b);
+            }
+        }
+        return bookings;
+    }
+
+    public void displayCurrentBookings() {
+        bookingList.sort(bookingDateTimeComparator);
+        System.out.printf("%-20s%-20s%-20s%-28s%-32s%-32s%-32s%-29s%-16s\n", "Booking ID",
+                "Passenger ID",
+                "Vehicle ID",
+                "Booking Date Time",
+                "Start Location Latitude",
+                "Start Location Longitude",
+                "End Location Latitude",
+                "End Location Longitude",
+                "Cost");
+        System.out.println("================    ================    ================    ========================    ============================    ============================    ============================    =========================    ===========");
+        for (Booking b : findCurrentBookings()) {
+            System.out.printf("%-20s%-20s%-20s%-28s%-32s%-32s%-32s%-29s%-10.2f\n",
+                    b.getBookingId(),
+                    b.getPassengerId(),
+                    b.getVehicleId(),
+                    b.getBookingDateTime(),
+                    b.getStartLocation().getLatitude(),
+                    b.getStartLocation().getLongitude(),
+                    b.getEndLocation().getLatitude(),
+                    b.getEndLocation().getLongitude(),
+                    b.getCost()
+            );
+        }
+    }
+
+    public List<Booking> findBookingByPassengerId(int passengerId) {
+        return filterBy(new BookingPassengerIdFilter(passengerId));
+    }
+
+    public List<Booking> filterBy(IFilter filter) {
+        List<Booking> filteredList = new ArrayList<>();
+        for (Booking b : this.bookingList) {
+            if (filter.matches(b))    // use matches() method of the filter to match products
+                filteredList.add(b);
+        }
+
+        return filteredList;
+    }
+
+    public void displayBookingByPassengerId(int passengerId) {
+        bookingList.sort(bookingDateTimeComparator);
+        System.out.printf("%-20s%-20s%-20s%-28s%-32s%-32s%-32s%-29s%-16s\n", "Booking ID",
+                "Passenger ID",
+                "Vehicle ID",
+                "Booking Date Time",
+                "Start Location Latitude",
+                "Start Location Longitude",
+                "End Location Latitude",
+                "End Location Longitude",
+                "Cost");
+        System.out.println("================    ================    ================    ========================    ============================    ============================    ============================    =========================    ===========");
+        for (Booking b : findBookingByPassengerId(passengerId)) {
+                System.out.printf("%-20s%-20s%-20s%-28s%-32s%-32s%-32s%-29s%-10.2f\n",
+                        b.getBookingId(),
+                        b.getPassengerId(),
+                        b.getVehicleId(),
+                        b.getBookingDateTime(),
+                        b.getStartLocation().getLatitude(),
+                        b.getStartLocation().getLongitude(),
+                        b.getEndLocation().getLatitude(),
+                        b.getEndLocation().getLongitude(),
+                        b.getCost()
+                );
+        }
+    }
+
+    public List<Booking> findBookingByPassengerName(String passengerName) {
+        return filterBy(new BookingPassengerNameFilter(passengerName));
+    }
+
+    public void displayBookingByPassengerName(String passengerName) {
+        bookingList.sort(bookingDateTimeComparator);
+        List<Booking> bookings = findBookingByPassengerName(passengerName);
+
+        if (!bookings.isEmpty())
+        {
+            System.out.printf("%-20s%-20s%-20s%-28s%-32s%-32s%-32s%-29s%-16s\n", "Booking ID",
+                    "Passenger ID",
+                    "Vehicle ID",
+                    "Booking Date Time",
+                    "Start Location Latitude",
+                    "Start Location Longitude",
+                    "End Location Latitude",
+                    "End Location Longitude",
+                    "Cost");
+            System.out.println("================    ================    ================    ========================    ============================    ============================    ============================    =========================    ===========");
+
+            for (Booking b : findBookingByPassengerName(passengerName))
+            {
+                System.out.printf("%-20s%-20s%-20s%-28s%-32s%-32s%-32s%-29s%-10.2f\n",
+                        b.getBookingId(),
+                        b.getPassengerId(),
+                        b.getVehicleId(),
+                        b.getBookingDateTime(),
+                        b.getStartLocation().getLatitude(),
+                        b.getStartLocation().getLongitude(),
+                        b.getEndLocation().getLatitude(),
+                        b.getEndLocation().getLongitude(),
+                        b.getCost()
+                );
+            }
+        } else {
+            System.out.println("Booking not found");
+        }
+    }
+
+
+    public void displayBookingByBookingId(int bookingId) {
+        Booking b = findBookingById(bookingId);
+        if (b != null)
+        {
+            System.out.printf("%-20s%-20s%-20s%-28s%-32s%-32s%-32s%-29s%-16s\n", "Booking ID",
+                    "Passenger ID",
+                    "Vehicle ID",
+                    "Booking Date Time",
+                    "Start Location Latitude",
+                    "Start Location Longitude",
+                    "End Location Latitude",
+                    "End Location Longitude",
+                    "Cost");
+            System.out.println("================    ================    ================    ========================    ============================    ============================    ============================    =========================    ===========");
+            System.out.printf("%-20s%-20s%-20s%-28s%-32s%-32s%-32s%-29s%-10.2f\n",
+                    b.getBookingId(),
+                    b.getPassengerId(),
+                    b.getVehicleId(),
+                    b.getBookingDateTime(),
+                    b.getStartLocation().getLatitude(),
+                    b.getStartLocation().getLongitude(),
+                    b.getEndLocation().getLatitude(),
+                    b.getEndLocation().getLongitude(),
+                    b.getCost()
+            );
+        } else {
+            System.out.println("Booking not found");
+        }
+    }
+
+    public void displayPassengerBookingsDateTimeOrder(int passengerId) {
+
+        bookingList.sort(bookingDateTimeComparator);
+
+        for (Booking b : bookingList) {
+            if (b.getPassengerId() == passengerId)
+                System.out.println(b);
+        }
+
+    }
+
+    public double calculateAverageLengthOfBookingJourneys() {
+        double total = 0;
+
+        for (Booking b : bookingList) {
+            total += b.getCost();
+        }
+
+        return total / bookingList.size();
+    }
+
+    public double calculateDistance(double startLat, double startLong, double endLat, double endLong) {
+        final int R = 6371; // Radius of the earth
+
+        double latitudeDistance = Math.toRadians(endLat - startLat);
+        double longitudeDistance = Math.toRadians(endLong - startLong);
+
+        double a = Math.sin(latitudeDistance / 2) * Math.sin(latitudeDistance / 2)
+                + Math.cos(Math.toRadians(startLat)) * Math.cos(Math.toRadians(endLat))
+                * Math.sin(longitudeDistance / 2) * Math.sin(longitudeDistance / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        double distance = Math.pow((R * c ), 2);
+
+        return Math.sqrt(distance) /  1.609;
+    }
+
+    public double calculateCost(int vehicleId, double startLat, double startLong, double endLat, double endLong) {
+        Vehicle v = findVehicleById(vehicleId);
+
+        double totalDistance = calculateDistance(v.getDepotGPSLocation().getLatitude(), v.getDepotGPSLocation().getLongitude(), startLat, startLong)
+                + calculateDistance(startLat, startLong, endLat, endLong)
+                + calculateDistance(endLat, endLong, v.getDepotGPSLocation().getLatitude(), v.getDepotGPSLocation().getLongitude());
+
+        double cost = totalDistance * v.getCostPerMile();
+
+        return (double) Math.round(cost*100)/100;
+
+    }
+
+
+    public Booking findBookingById(int bookingId) {
+        for (Booking b : bookingList) {
+            if(b.getBookingId() == bookingId)
+                return b;
+        }
+        return null;
+    }
+
+    public void deleteBookingById(int bookingId) {
+        bookingList.removeIf(b -> b.equals(findBookingById(bookingId)));
+    }
+
+    public boolean checkAvailability(int vehicleId, LocalDateTime bookingDateTime) {
+        // assume 1 booking is for 24 hours
+        boolean available = true;
+
+        for (Booking b : bookingList) {
+            if (vehicleId == b.getVehicleId())
+            {
+                if (bookingDateTime.isAfter(b.getBookingDateTime()))
+                {
+                    if (bookingDateTime.isBefore(b.getBookingDateTime().plusDays(1)))
+                        available = false;
+                }
+                else if (bookingDateTime.isBefore(b.getBookingDateTime()))
+                {
+                    if (bookingDateTime.plusDays(1).isAfter(b.getBookingDateTime()))
+                    {
+                        available = false;
+                    }
+                }
+                else
+                {
+                    available = false;
+                }
+            }
+        }
+
+        return available;
+    }
+
+    public void editAllBookingDetails(int bookingId, int passengerId, int vehicleId, int year, int month,
+                                      int day, int hour, int minute,
+                                      double startLocationLatitude, double startLocationLongitude, double endLocationLatitude, double endLocationLongitude)
+    {
+        double cost = calculateCost(vehicleId, startLocationLatitude, startLocationLongitude, endLocationLatitude, endLocationLongitude);
+        Booking newBooking = new Booking(passengerId, vehicleId, year, month, day, hour, minute, startLocationLatitude, startLocationLongitude, endLocationLatitude, endLocationLongitude, cost);
+        Booking foundBooking = findBookingById(bookingId);
+
+        boolean duplicate = false;
+
+        if (bookingList.contains(newBooking)) {
+            duplicate = true;
+            System.out.println("Booking not edited - booking already exists in the system");
+        }
+        if (!duplicate) {
+            if (checkAvailability(vehicleId, LocalDateTime.of(year,month,day,hour,minute)))
+            {
+                foundBooking.setPassengerId(passengerId);
+                foundBooking.setVehicleId(vehicleId);
+                foundBooking.setBookingDateTime(year, month, day, hour, minute);
+                foundBooking.setStartLocation(startLocationLatitude, startLocationLongitude);
+                foundBooking.setEndLocation(endLocationLatitude, endLocationLongitude);
+                foundBooking.setCost(cost);
+                System.out.println("Booking edited, here is your updated booking details:");
+                displayBookingByBookingId(bookingId);
+            }
+            else {
+                System.out.println("Booking not edited - vehicle not available");
+            }
+        }
+
+    }
+
+    public void editPassengerId(int bookingId, int passengerId) {
+        Booking foundBooking = findBookingById(bookingId);
+        Booking newBooking = new Booking(passengerId, foundBooking.getVehicleId(),
+                foundBooking.getBookingDateTime().getYear(), foundBooking.getBookingDateTime().getMonthValue(), foundBooking.getBookingDateTime().getDayOfMonth(),
+                foundBooking.getBookingDateTime().getHour(), foundBooking.getBookingDateTime().getMinute(), foundBooking.getStartLocation().getLatitude(), foundBooking.getStartLocation().getLongitude(),
+                foundBooking.getEndLocation().getLatitude(), foundBooking.getEndLocation().getLongitude(), foundBooking.getCost());
+
+        if (passengerStore.findPassengerById(passengerId) == null)
+        {
+            System.out.println("Booking not edited - passenger doesn't exist in the system");
+            if (bookingList.contains(newBooking))
+            {
+                System.out.println("Booking not edited - booking already exists in the system");
+            }
+        }
+        else
+        {
+            foundBooking.setPassengerId(passengerId);
+            System.out.println("Booking edited, here is your updated booking details:");
+            displayBookingByBookingId(bookingId);
+        }
+    }
+
+    public void editVehicleId(int bookingId, int vehicleId) {
+        Booking foundBooking = findBookingById(bookingId);
+        Booking newBooking = new Booking(foundBooking.getPassengerId(), vehicleId,
+                foundBooking.getBookingDateTime().getYear(), foundBooking.getBookingDateTime().getMonthValue(), foundBooking.getBookingDateTime().getDayOfMonth(),
+                foundBooking.getBookingDateTime().getHour(), foundBooking.getBookingDateTime().getMinute(), foundBooking.getStartLocation().getLatitude(), foundBooking.getStartLocation().getLongitude(),
+                foundBooking.getEndLocation().getLatitude(), foundBooking.getEndLocation().getLongitude(), foundBooking.getCost());
+
+        if (findVehicleById(vehicleId) != null) {
+            if(checkAvailability(vehicleId, foundBooking.getBookingDateTime())) {
+                if (!bookingList.contains(newBooking)) {
+                    foundBooking.setVehicleId(vehicleId);
+                    System.out.println("Booking edited, here is your updated booking details:");
+                    displayBookingByBookingId(bookingId);
+                }
+                else {
+                    System.out.println("Booking not edited - booking already exists in the system");
+                }
+            }
+            else {
+                System.out.println("Booking not edited - vehicle is not available");
+
+            }
+        }
+        else {
+            System.out.println("Booking not edited - vehicle doesn't exist in the system");
+        }
+    }
+
+    public void editBookingDateTime(int bookingId, int year, int month, int day, int hour, int minute) {
+        Booking foundBooking = findBookingById(bookingId);
+
+        if(checkAvailability(foundBooking.getVehicleId(), LocalDateTime.of(year, month, day, hour, minute))) {
+            foundBooking.setBookingDateTime(year, month, day, hour, minute);
+            System.out.println("Booking edited, here is your updated booking details:");
+            displayBookingByBookingId(bookingId);
+        }
+        else {
+            System.out.println("Booking not edited - vehicle is not available");
+        }
+    }
+
+
+
+    public void editBookingStartLocation(int bookingId, double startLatitude, double startLongitude) {
+        Booking foundBooking = findBookingById(bookingId);
+        foundBooking.setStartLocation(startLatitude, startLongitude);
+        foundBooking.setCost(calculateCost(foundBooking.getVehicleId(), startLatitude, startLongitude,
+                foundBooking.getEndLocation().getLatitude(), foundBooking.getEndLocation().getLongitude()));
+        System.out.println("Booking edited, here is your updated booking details:");
+        displayBookingByBookingId(bookingId);
+    }
+
+    public void editBookingEndLocation(int bookingId, double endLatitude, double endLongitude) {
+        Booking foundBooking = findBookingById(bookingId);
+        foundBooking.setEndLocation(endLatitude, endLongitude);
+        foundBooking.setCost(calculateCost(foundBooking.getVehicleId(), foundBooking.getStartLocation().getLatitude(), foundBooking.getStartLocation().getLongitude(),
+                endLatitude, endLongitude));
+        System.out.println("Booking edited, here is your updated booking details:");
+        displayBookingByBookingId(bookingId);
+
+    }
+
+    public void displayAllPassengers() {
+        passengerStore.displayAllPassengers();
+    }
+
+    public void displayAllVehicleIdTypeMakeModel() {
+        vehicleManager.displayAllVehicleIdTypeMakeModel();
+    }
+
+    public Vehicle findVehicleById(int id) {
+        return vehicleManager.findVehicleById(id);
+    }
+
+    public Vehicle findVehicleByRegistration(String reg) {
+        return vehicleManager.findVehicleByRegistration(reg);
+    }
+
+    public List<Vehicle> findVehiclesByType(String type)
+    {
+        return vehicleManager.findVehiclesByType(type);
+    }
+
+    public List<Vehicle> findVehiclesByNumOfSeats(int numOfSeats) {
+        return vehicleManager.findVehiclesByNumOfSeats(numOfSeats);
+    }
+
+    public Passenger findPassengerByName(String name) {
+        return passengerStore.findPassengerByName(name);
+    }
+
+    public Passenger findPassengerById(int id) {
+        return passengerStore.findPassengerById(id);
+    }
+
+    public void displayPassengerById(int id) {
+        passengerStore.displayPassengerById(id);
+    }
+
+    // Edit Methods
+
+    public void editAllPassengerDetails(int id, String name, String email, String phone,
+                                        double latitude, double longitude) {
+        passengerStore.editAllPassengerDetails(id, name, email, phone, latitude, longitude);
+    }
+
+    public void editPassengerName(int id, String name) {
+        passengerStore.editPassengerName(id, name);
+    }
+
+
+    public void editPassengerEmail (int id, String email) {
+        passengerStore.editPassengerEmail(id, email);
+    }
+
+    public void editPassengerPhone (int id,String phone) {
+        passengerStore.editPassengerPhone(id, phone);
+    }
+
+    public void editPassengerLocation (int id, double latitude, double longitude) {
+        passengerStore.editPassengerLocation(id, latitude, longitude);
+    }
+
+
+    // Delete Method
+
+    public void deletePassengerById(int id) {
+        passengerStore.deletePassengerById(id);
+    }
+
+    public void deletePassengerByName(String name) {
+        passengerStore.deletePassengerByName(name);
+    }
+
+
 
 }
