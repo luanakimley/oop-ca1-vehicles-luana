@@ -20,7 +20,37 @@ public class PassengerStore implements Serializable
         return this.passengerList;
     }
 
+    /**
+     * Read Passenger records from a text file and create and add Passenger
+     * objects to the PassengerStore.
+     */
+    private void loadPassengerDataFromFile(String filename) {
 
+        try {
+            Scanner sc = new Scanner(new File(filename));
+//           Delimiter: set the delimiter to be a comma character ","
+//                    or a carriage-return '\r', or a newline '\n'
+            sc.useDelimiter("[,\r\n]+");
+
+            while (sc.hasNext()) {
+                int id = sc.nextInt();
+                String name = sc.next();
+                String email = sc.next();
+                String phone = sc.next();
+                double latitude = sc.nextDouble();
+                double longitude = sc.nextDouble();
+
+                // construct a Passenger object and add it to the passenger list
+                passengerList.add(new Passenger(id, name, email, phone, latitude, longitude));
+            }
+            sc.close();
+
+        } catch (IOException e) {
+            System.out.println("Exception thrown. " + e);
+        }
+    }
+
+    // TODO - see functional spec for details of code to add
     public void displayAllPassengers() {
         passengerList.sort(passengerNameComparator);
         System.out.printf("%-8s%-28s%-36s%-24s%-20s%-1s\n","ID", "Name", "Email", "Phone", "Home Latitude", "Home Longitude");
@@ -55,38 +85,6 @@ public class PassengerStore implements Serializable
     }
 
     /**
-     * Read Passenger records from a text file and create and add Passenger
-     * objects to the PassengerStore.
-     */
-    private void loadPassengerDataFromFile(String filename) {
-
-        try {
-            Scanner sc = new Scanner(new File(filename));
-//           Delimiter: set the delimiter to be a comma character ","
-//                    or a carriage-return '\r', or a newline '\n'
-            sc.useDelimiter("[,\r\n]+");
-
-            while (sc.hasNext()) {
-                int id = sc.nextInt();
-                String name = sc.next();
-                String email = sc.next();
-                String phone = sc.next();
-                double latitude = sc.nextDouble();
-                double longitude = sc.nextDouble();
-
-                // construct a Passenger object and add it to the passenger list
-                passengerList.add(new Passenger(id, name, email, phone, latitude, longitude));
-            }
-            sc.close();
-
-        } catch (IOException e) {
-            System.out.println("Exception thrown. " + e);
-        }
-    }
-
-    // TODO - see functional spec for details of code to add
-
-    /**
      * Write Passenger records to text file
      */
     public void savePassengerDataToFile(String fileName)
@@ -107,7 +105,7 @@ public class PassengerStore implements Serializable
 
     public Passenger findPassengerByName(String name) {
         for (Passenger p : passengerList) {
-            if(p.getName().toLowerCase().contains(name.toLowerCase()))
+            if(p.getName().equalsIgnoreCase(name.toLowerCase()))
                 return p;
         }
         return null;
@@ -121,6 +119,19 @@ public class PassengerStore implements Serializable
         return null;
     }
 
+    public void displayPassengerById(int id) {
+        Passenger foundPassenger = findPassengerById(id);
+        System.out.printf("%-8s%-28s%-36s%-24s%-20s%-1s\n","ID", "Name", "Email", "Phone", "Home Latitude", "Home Longitude");
+        System.out.println("====    ========================    ================================    ====================    ================    ===============");
+        System.out.printf("%-8s%-28s%-36s%-24s%-20s%-1s\n",
+                foundPassenger.getId(),
+                foundPassenger.getName(),
+                foundPassenger.getEmail(),
+                foundPassenger.getPhone(),
+                foundPassenger.getLocation().getLatitude(),
+                foundPassenger.getLocation().getLongitude()
+        );
+    }
 
     // Edit Methods
 
@@ -139,7 +150,8 @@ public class PassengerStore implements Serializable
             foundPassenger.setEmail(email);
             foundPassenger.setPhone(phone);
             foundPassenger.setLocation(latitude, longitude);
-            System.out.println("Passenger edited.");
+            System.out.println("Passenger edited, here is your updated passenger details:");
+            displayPassengerById(id);
         }
 
 
@@ -147,23 +159,47 @@ public class PassengerStore implements Serializable
 
     public void editPassengerName(int id, String name) {
         Passenger foundPassenger = findPassengerById(id);
-        foundPassenger.setName(name);
+        Passenger newPassenger = new Passenger(name, foundPassenger.getEmail(), foundPassenger.getPhone(), foundPassenger.getLocation().getLatitude(), foundPassenger.getLocation().getLongitude());
+        if (passengerList.contains(newPassenger))
+        {
+            System.out.println("Passenger not edited - passenger already exists in the system");
+        }
+        else
+        {
+            foundPassenger.setName(name);
+            System.out.println("Passenger edited, here is your updated passenger details:");
+            displayPassengerById(id);
+        }
     }
 
 
     public void editPassengerEmail (int id, String email) {
         Passenger foundPassenger = findPassengerById(id);
-        foundPassenger.setEmail(email);
+        Passenger newPassenger = new Passenger(foundPassenger.getName(), email, foundPassenger.getPhone(), foundPassenger.getLocation().getLatitude(), foundPassenger.getLocation().getLongitude());
+        if (passengerList.contains(newPassenger))
+        {
+            System.out.println("Passenger not edited - passenger already exists in the system");
+        }
+        else
+        {
+            foundPassenger.setName(email);
+            System.out.println("Passenger edited, here is your updated passenger details:");
+            displayPassengerById(id);
+        }
     }
 
     public void editPassengerPhone (int id,String phone) {
         Passenger foundPassenger = findPassengerById(id);
         foundPassenger.setPhone(phone);
+        System.out.println("Passenger edited, here is your updated passenger details:");
+        displayPassengerById(id);
     }
 
     public void editPassengerLocation (int id, double latitude, double longitude) {
         Passenger foundPassenger = findPassengerById(id);
         foundPassenger.setLocation(latitude, longitude);
+        System.out.println("Passenger edited, here is your updated passenger details:");
+        displayPassengerById(id);
     }
 
 
@@ -176,14 +212,6 @@ public class PassengerStore implements Serializable
     public void deletePassengerByName(String name) {
         passengerList.removeIf(p -> p.equals(findPassengerByName(name)));
     }
-
-
-
-
-
-
-
-
 
 
 } // end class
