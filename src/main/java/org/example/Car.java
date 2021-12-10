@@ -1,5 +1,7 @@
 package org.example;
 
+import java.io.Serializable;
+
 // Car class to represent Cars and 4x4s
 //
 public class Car extends Vehicle implements Serializable
