@@ -9,6 +9,10 @@ public class VehicleManager implements Serializable
 {
     private final List<Vehicle> vehicleList;  // for Car and Van objects
 
+    // Comparators
+    VehicleRegistrationComparator vehicleRegistrationComparator = new VehicleRegistrationComparator();
+    VehicleLoadSpaceComparator vehicleLoadSpaceComparator = new VehicleLoadSpaceComparator();
+
     public VehicleManager(String fileName) {
         this.vehicleList = new ArrayList<>();
         loadVehiclesFromFile(fileName);
@@ -224,6 +228,7 @@ public class VehicleManager implements Serializable
 
     public void displayVehiclesByType(String type) {
         List<Vehicle> vehicles = findVehiclesByType(type);
+        vehicles.sort(vehicleRegistrationComparator);
         if (!vehicles.isEmpty()) {
             System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-15s%-10s\n",
                     "ID",
@@ -262,6 +267,7 @@ public class VehicleManager implements Serializable
 
     public void displayVehiclesByNumOfSeats(int numOfSeats) {
         List<Vehicle> vehicles = findVehiclesByNumOfSeats(numOfSeats);
+        vehicles.sort(vehicleRegistrationComparator);
         if (!vehicles.isEmpty()) {
             System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-10s\n",
                     "ID",
@@ -290,6 +296,79 @@ public class VehicleManager implements Serializable
             System.out.println("Vehicle not found");
         }
     }
+
+    public List<Vehicle> findVehiclesByLoadSpaceLessThan(double loadSpace) {
+        return filterBy(new VehicleLoadSpaceLessThanFilter(loadSpace));
+    }
+
+    public void displayVehiclesByLoadSpaceLessThan(double loadSpace) {
+        List<Vehicle> vehicles = findVehiclesByLoadSpaceLessThan(loadSpace);
+        vehicles.sort(vehicleLoadSpaceComparator);
+        if (!vehicles.isEmpty()) {
+            System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-15s\n",
+                    "ID",
+                    "Type",
+                    "Make",
+                    "Model",
+                    "Miles per KwH",
+                    "Registration",
+                    "Cost per Mile",
+                    "Last Serviced Date",
+                    "Mileage",
+                    "Depot Location Latitude",
+                    "Depot Location Longitude",
+                    "Load Space");
+            System.out.println("=======   =========   ===============   ===============   =================   =================   ===============   ===================   ===========   ========================   =========================   ============");
+            for (Vehicle v : vehicles)
+            {
+                System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-15s\n",
+                        v.getId(), v.getType(), v.getMake(), v.getModel(), v.getMilesPerKwH(),
+                        v.getRegistration(), v.getCostPerMile(), v.getLastServicedDate(),
+                        v.getMileage(), v.getDepotGPSLocation().getLatitude(), v.getDepotGPSLocation().getLongitude(),
+                        ((Van) v).getLoadSpace());
+            }
+        }
+        else {
+            System.out.println("Vehicle not found");
+        }
+    }
+
+    public List<Vehicle> findVehiclesByLoadSpaceMoreThan(double loadSpace) {
+        return filterBy(new VehicleLoadSpaceMoreThanFilter(loadSpace));
+    }
+
+    public void displayVehiclesByLoadSpaceMoreThan(double loadSpace) {
+        List<Vehicle> vehicles = findVehiclesByLoadSpaceMoreThan(loadSpace);
+        vehicles.sort(vehicleLoadSpaceComparator);
+        if (!vehicles.isEmpty()) {
+            System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-15s\n",
+                    "ID",
+                    "Type",
+                    "Make",
+                    "Model",
+                    "Miles per KwH",
+                    "Registration",
+                    "Cost per Mile",
+                    "Last Serviced Date",
+                    "Mileage",
+                    "Depot Location Latitude",
+                    "Depot Location Longitude",
+                    "Load Space");
+            System.out.println("=======   =========   ===============   ===============   =================   =================   ===============   ===================   ===========   ========================   =========================   ============");
+            for (Vehicle v : vehicles)
+            {
+                System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-15s\n",
+                        v.getId(), v.getType(), v.getMake(), v.getModel(), v.getMilesPerKwH(),
+                        v.getRegistration(), v.getCostPerMile(), v.getLastServicedDate(),
+                        v.getMileage(), v.getDepotGPSLocation().getLatitude(), v.getDepotGPSLocation().getLongitude(),
+                        ((Van) v).getLoadSpace());
+            }
+        }
+        else {
+            System.out.println("Vehicle not found");
+        }
+    }
+
 
     public List<Vehicle> filterBy(IFilter filter) {
         List<Vehicle> filteredList = new ArrayList<>();

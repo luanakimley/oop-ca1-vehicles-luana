@@ -288,14 +288,18 @@ public class App
                     + "2. Find Vehicle by Registration\n"
                     + "3. Find Vehicle by Type\n"
                     + "4. Find Vehicle by Number of Seats\n"
-                    + "5. Exit\n"
-                    + "Enter Option [1,5]";
+                    + "5. Find Vehicle by Load Space less than...\n"
+                    + "6. Find Vehicle by Load Space more than...\n"
+                    + "7. Exit\n"
+                    + "Enter Option [1,7]";
 
             final int FIND_BY_ID = 1;
             final int FIND_BY_REG = 2;
             final int FIND_BY_TYPE = 3;
             final int FIND_BY_NUMOFSEATS = 4;
-            final int EXIT = 5;
+            final int FIND_BY_LOADSPACE_LESS = 5;
+            final int FIND_BY_LOADSPACE_MORE = 6;
+            final int EXIT = 7;
 
             Scanner keyboard = new Scanner(System.in);
             int option = 0;
@@ -319,6 +323,12 @@ public class App
                             break;
                         case FIND_BY_NUMOFSEATS:
                             findVehiclesByNumOfSeatsOption();
+                            break;
+                        case FIND_BY_LOADSPACE_LESS:
+                            findVehicleByLoadSpaceLessOption();
+                            break;
+                        case FIND_BY_LOADSPACE_MORE:
+                            findVehicleByLoadSpaceMoreOption();
                             break;
                         case EXIT:
                             System.out.println("Exit Menu option chosen");
@@ -754,6 +764,22 @@ public class App
             bookingManager.displayVehiclesByNumOfSeats(numOfSeats);
         }
 
+        private void findVehicleByLoadSpaceLessOption() {
+            Scanner keyboard = new Scanner(System.in);
+            System.out.println("\nDisplay Vehicle by Load Space less than...");
+            System.out.println("Enter vehicle load space:");
+            double loadSpace = keyboard.nextDouble();
+            bookingManager.displayVehiclesByLoadSpaceLessThan(loadSpace);
+        }
+
+    private void findVehicleByLoadSpaceMoreOption() {
+        Scanner keyboard = new Scanner(System.in);
+        System.out.println("\nDisplay Vehicle by Load Space more than...");
+        System.out.println("Enter vehicle load space:");
+        double loadSpace = keyboard.nextDouble();
+        bookingManager.displayVehiclesByLoadSpaceMoreThan(loadSpace);
+    }
+
         /*
          *  Booking options
          */
@@ -1052,6 +1078,3 @@ public class App
         }
 
     }
-
-
-

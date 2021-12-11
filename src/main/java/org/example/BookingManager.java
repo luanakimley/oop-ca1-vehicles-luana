@@ -524,18 +524,11 @@ public class BookingManager implements Serializable
         vehicleManager.displayVehicleById(id);
     }
 
-    public Vehicle findVehicleByRegistration(String reg) {
-        return vehicleManager.findVehicleByRegistration(reg);
-    }
 
     public void displayVehicleByRegistration(String reg) {
         vehicleManager.displayVehicleByRegistration(reg);
     }
 
-    public List<Vehicle> findVehiclesByType(String type)
-    {
-        return vehicleManager.findVehiclesByType(type);
-    }
 
     public void displayVehiclesByType(String type) {
         vehicleManager.displayVehiclesByType(type);
@@ -545,8 +538,13 @@ public class BookingManager implements Serializable
         vehicleManager.displayVehiclesByNumOfSeats(numOfSeats);
     }
 
-    public List<Vehicle> findVehiclesByNumOfSeats(int numOfSeats) {
-        return vehicleManager.findVehiclesByNumOfSeats(numOfSeats);
+
+    public void displayVehiclesByLoadSpaceLessThan(double loadSpace) {
+        vehicleManager.displayVehiclesByLoadSpaceLessThan(loadSpace);
+    }
+
+    public void displayVehiclesByLoadSpaceMoreThan(double loadSpace) {
+        vehicleManager.displayVehiclesByLoadSpaceMoreThan(loadSpace);
     }
 
     public Passenger findPassengerByName(String name) {
@@ -560,6 +558,8 @@ public class BookingManager implements Serializable
     public void displayPassengerById(int id) {
         passengerStore.displayPassengerById(id);
     }
+
+
 
 
     public void editAllPassengerDetails(int id, String name, String email, String phone,
