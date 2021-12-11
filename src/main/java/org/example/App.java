@@ -823,6 +823,10 @@ public class App
                         email.constructEmail(newBooking);
                         System.out.println(email);
                     }
+                    if (ans.equalsIgnoreCase("n"))
+                    {
+                        System.out.println("Email will not be sent.");
+                    }
                 }
             } catch (DateTimeException e)
             {
