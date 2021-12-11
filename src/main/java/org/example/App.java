@@ -916,11 +916,12 @@ public class App
                     {
                         Email email = new Email(bookingManager.findPassengerById(passengerId).getEmail());
                         email.constructEmail(newBooking);
+                        System.out.println("\nEmail sent.");
                         System.out.println(email);
                     }
                     if (ans.equalsIgnoreCase("n"))
                     {
-                        System.out.println("Email will not be sent.");
+                        System.out.println("\nEmail will not be sent.");
                     }
                 }
             } catch (DateTimeException e)
