@@ -1,10 +1,11 @@
 package org.example;
 
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 
-public class Email
+public class Email implements Serializable
 {
     private String to;
     private final String subject = "Your Booking Details";
