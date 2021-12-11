@@ -9,6 +9,7 @@ public class Email
     private String to;
     private final String subject = "Your Booking Details";
     private final LocalDateTime dateTime = LocalDateTime.now();
+    private String text;
 
     public String getText()
     {
@@ -19,8 +20,6 @@ public class Email
     {
         this.text = text;
     }
-
-    private String text;
 
 
     public Email(String to) {
