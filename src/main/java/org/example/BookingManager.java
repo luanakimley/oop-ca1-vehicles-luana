@@ -204,18 +204,21 @@ public class BookingManager implements Serializable
     }
 
     public void displayBookingByPassengerId(int passengerId) {
+        List<Booking> bookings = findBookingByPassengerId(passengerId);
         bookingList.sort(bookingDateTimeComparator);
-        System.out.printf("%-20s%-20s%-20s%-28s%-32s%-32s%-32s%-29s%-16s\n", "Booking ID",
-                "Passenger ID",
-                "Vehicle ID",
-                "Booking Date Time",
-                "Start Location Latitude",
-                "Start Location Longitude",
-                "End Location Latitude",
-                "End Location Longitude",
-                "Cost");
-        System.out.println("================    ================    ================    ========================    ============================    ============================    ============================    =========================    ===========");
-        for (Booking b : findBookingByPassengerId(passengerId)) {
+        if (!bookings.isEmpty()){
+            System.out.printf("%-20s%-20s%-20s%-28s%-32s%-32s%-32s%-29s%-16s\n", "Booking ID",
+                    "Passenger ID",
+                    "Vehicle ID",
+                    "Booking Date Time",
+                    "Start Location Latitude",
+                    "Start Location Longitude",
+                    "End Location Latitude",
+                    "End Location Longitude",
+                    "Cost");
+            System.out.println("================    ================    ================    ========================    ============================    ============================    ============================    =========================    ===========");
+
+            for (Booking b : bookings) {
                 System.out.printf("%-20s%-20s%-20s%-28s%-32s%-32s%-32s%-29s%-10.2f\n",
                         b.getBookingId(),
                         b.getPassengerId(),
@@ -227,6 +230,9 @@ public class BookingManager implements Serializable
                         b.getEndLocation().getLongitude(),
                         b.getCost()
                 );
+        }}
+        else {
+            System.out.println("Booking not found");
         }
     }
 
@@ -251,7 +257,7 @@ public class BookingManager implements Serializable
                     "Cost");
             System.out.println("================    ================    ================    ========================    ============================    ============================    ============================    =========================    ===========");
 
-            for (Booking b : findBookingByPassengerName(passengerName))
+            for (Booking b : bookings)
             {
                 System.out.printf("%-20s%-20s%-20s%-28s%-32s%-32s%-32s%-29s%-10.2f\n",
                         b.getBookingId(),
@@ -301,16 +307,6 @@ public class BookingManager implements Serializable
         }
     }
 
-    public void displayPassengerBookingsDateTimeOrder(int passengerId) {
-
-        bookingList.sort(bookingDateTimeComparator);
-
-        for (Booking b : bookingList) {
-            if (b.getPassengerId() == passengerId)
-                System.out.println(b);
-        }
-
-    }
 
     public double calculateAverageLengthOfBookingJourneys() {
         double total = 0;
@@ -366,7 +362,7 @@ public class BookingManager implements Serializable
     }
 
     public boolean checkAvailability(int vehicleId, LocalDateTime bookingDateTime) {
-        // assume 1 booking is for 24 hours
+        // 1 booking is for 24 hours
         boolean available = true;
 
         for (Booking b : bookingList) {
@@ -516,21 +512,37 @@ public class BookingManager implements Serializable
         passengerStore.displayAllPassengers();
     }
 
-    public void displayAllVehicleIdTypeMakeModel() {
-        vehicleManager.displayAllVehicleIdTypeMakeModel();
+    public void displayAllVehicles() {
+        vehicleManager.displayAllVehicles();
     }
 
     public Vehicle findVehicleById(int id) {
         return vehicleManager.findVehicleById(id);
     }
 
+    public void displayVehicleById(int id) {
+        vehicleManager.displayVehicleById(id);
+    }
+
     public Vehicle findVehicleByRegistration(String reg) {
         return vehicleManager.findVehicleByRegistration(reg);
+    }
+
+    public void displayVehicleByRegistration(String reg) {
+        vehicleManager.displayVehicleByRegistration(reg);
     }
 
     public List<Vehicle> findVehiclesByType(String type)
     {
         return vehicleManager.findVehiclesByType(type);
+    }
+
+    public void displayVehiclesByType(String type) {
+        vehicleManager.displayVehiclesByType(type);
+    }
+
+    public void displayVehiclesByNumOfSeats(int numOfSeats) {
+        vehicleManager.displayVehiclesByNumOfSeats(numOfSeats);
     }
 
     public List<Vehicle> findVehiclesByNumOfSeats(int numOfSeats) {
@@ -549,7 +561,6 @@ public class BookingManager implements Serializable
         passengerStore.displayPassengerById(id);
     }
 
-    // Edit Methods
 
     public void editAllPassengerDetails(int id, String name, String email, String phone,
                                         double latitude, double longitude) {
@@ -573,8 +584,6 @@ public class BookingManager implements Serializable
         passengerStore.editPassengerLocation(id, latitude, longitude);
     }
 
-
-    // Delete Method
 
     public void deletePassengerById(int id) {
         passengerStore.deletePassengerById(id);

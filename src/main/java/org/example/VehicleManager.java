@@ -14,12 +14,6 @@ public class VehicleManager implements Serializable
         loadVehiclesFromFile(fileName);
     }
 
-    public void displayAllVehicles() {
-        for (Vehicle v : vehicleList)
-            System.out.println(v);
-    }
-
-
     public List<Vehicle> getVehicleList()
     {
         return vehicleList;
@@ -118,13 +112,34 @@ public class VehicleManager implements Serializable
         }
     }
 
-    public void displayAllVehicleIdTypeMakeModel() {
-        for (Vehicle v : vehicleList) {
-            System.out.println("ID: " + v.getId() + ", Type: " + v.getType() + ", Make: " + v.getMake() + ", Model: " + v.getModel());
-        }
+    public void displayAllVehicles()
+    {
+        System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-15s%-10s\n",
+                "ID",
+                "Type",
+                "Make",
+                "Model",
+                "Miles per KwH",
+                "Registration",
+                "Cost per Mile",
+                "Last Serviced Date",
+                "Mileage",
+                "Depot Location Latitude",
+                "Depot Location Longitude",
+                "Load Space",
+                "Number of Seats");
+        System.out.println("=======   =========   ===============   ===============   =================   =================   ===============   ===================   ===========   ========================   =========================   ============   ===============");
+        for (Vehicle v : vehicleList)
+            System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-15s%-10s\n",
+                    v.getId(), v.getType(), v.getMake(), v.getModel(), v.getMilesPerKwH(),
+                    v.getRegistration(), v.getCostPerMile(), v.getLastServicedDate(),
+                    v.getMileage(), v.getDepotGPSLocation().getLatitude(), v.getDepotGPSLocation().getLongitude(),
+                    (v instanceof Van ? ((Van) v).getLoadSpace() : "-"),
+                    (v instanceof Car ? ((Car) v).getNumOfSeats() : "-")
+            );
+
+
     }
-
-
 
     public Vehicle findVehicleById(int id) {
         for (Vehicle v : vehicleList) {
@@ -134,8 +149,35 @@ public class VehicleManager implements Serializable
         return null;
     }
 
-
-
+    public void displayVehicleById(int id) {
+        Vehicle v = findVehicleById(id);
+        if (v != null) {
+            System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-15s%-10s\n",
+                    "ID",
+                    "Type",
+                    "Make",
+                    "Model",
+                    "Miles per KwH",
+                    "Registration",
+                    "Cost per Mile",
+                    "Last Serviced Date",
+                    "Mileage",
+                    "Depot Location Latitude",
+                    "Depot Location Longitude",
+                    "Load Space",
+                    "Number of Seats");
+            System.out.println("=======   =========   ===============   ===============   =================   =================   ===============   ===================   ===========   ========================   =========================   ============   ===============");
+            System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-15s%-10s\n",
+                    v.getId(), v.getType(), v.getMake(), v.getModel(), v.getMilesPerKwH(),
+                    v.getRegistration(), v.getCostPerMile(), v.getLastServicedDate(),
+                    v.getMileage(), v.getDepotGPSLocation().getLatitude(), v.getDepotGPSLocation().getLongitude(),
+                    (v instanceof Van ? ((Van) v).getLoadSpace() : "-"),
+                    (v instanceof Car ? ((Car) v).getNumOfSeats() : "-"));
+        }
+        else {
+            System.out.println("Vehicle not found");
+        }
+    }
 
     public Vehicle findVehicleByRegistration(String reg) {
         for (Vehicle v : vehicleList) {
@@ -144,29 +186,118 @@ public class VehicleManager implements Serializable
         }
         return null;
     }
+    public void displayVehicleByRegistration(String reg) {
+        Vehicle v = findVehicleByRegistration(reg);
+        if (v != null) {
+            System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-15s%-10s\n",
+                    "ID",
+                    "Type",
+                    "Make",
+                    "Model",
+                    "Miles per KwH",
+                    "Registration",
+                    "Cost per Mile",
+                    "Last Serviced Date",
+                    "Mileage",
+                    "Depot Location Latitude",
+                    "Depot Location Longitude",
+                    "Load Space",
+                    "Number of Seats");
+            System.out.println("=======   =========   ===============   ===============   =================   =================   ===============   ===================   ===========   ========================   =========================   ============   ===============");
+            System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-15s%-10s\n",
+                    v.getId(), v.getType(), v.getMake(), v.getModel(), v.getMilesPerKwH(),
+                    v.getRegistration(), v.getCostPerMile(), v.getLastServicedDate(),
+                    v.getMileage(), v.getDepotGPSLocation().getLatitude(), v.getDepotGPSLocation().getLongitude(),
+                    (v instanceof Van ? ((Van) v).getLoadSpace() : "-"),
+                    (v instanceof Car ? ((Car) v).getNumOfSeats() : "-"));
+        }
+        else {
+            System.out.println("Vehicle not found");
+        }
+    }
+
 
     public List<Vehicle> findVehiclesByType(String type)
     {
-        List<Vehicle> list = new ArrayList<>();
+        return filterBy(new VehicleTypeFilter(type));
+    }
 
-        for (Vehicle v : vehicleList) {
-            if (v.getType().equalsIgnoreCase(type))
-                list.add(v);
+    public void displayVehiclesByType(String type) {
+        List<Vehicle> vehicles = findVehiclesByType(type);
+        if (!vehicles.isEmpty()) {
+            System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-15s%-10s\n",
+                    "ID",
+                    "Type",
+                    "Make",
+                    "Model",
+                    "Miles per KwH",
+                    "Registration",
+                    "Cost per Mile",
+                    "Last Serviced Date",
+                    "Mileage",
+                    "Depot Location Latitude",
+                    "Depot Location Longitude",
+                    "Load Space",
+                    "Number of Seats");
+            System.out.println("=======   =========   ===============   ===============   =================   =================   ===============   ===================   ===========   ========================   =========================   ============   ===============");
+            for (Vehicle v : vehicles)
+            {
+                System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-15s%-10s\n",
+                        v.getId(), v.getType(), v.getMake(), v.getModel(), v.getMilesPerKwH(),
+                        v.getRegistration(), v.getCostPerMile(), v.getLastServicedDate(),
+                        v.getMileage(), v.getDepotGPSLocation().getLatitude(), v.getDepotGPSLocation().getLongitude(),
+                        (v instanceof Van ? ((Van) v).getLoadSpace() : "-"),
+                        (v instanceof Car ? ((Car) v).getNumOfSeats() : "-"));
+            }
+        }
+        else {
+            System.out.println("Vehicle not found");
         }
 
-        return list;
     }
 
     public List<Vehicle> findVehiclesByNumOfSeats(int numOfSeats) {
-        List<Vehicle> list = new ArrayList<>();
+        return filterBy(new VehicleNumOfSeatsFilter(numOfSeats));
+    }
 
-        for (Vehicle v : vehicleList) {
-            if (v instanceof Car) {
-                if (((Car) v).getNumOfSeats() == numOfSeats)
-                   list.add(v);
+    public void displayVehiclesByNumOfSeats(int numOfSeats) {
+        List<Vehicle> vehicles = findVehiclesByNumOfSeats(numOfSeats);
+        if (!vehicles.isEmpty()) {
+            System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-10s\n",
+                    "ID",
+                    "Type",
+                    "Make",
+                    "Model",
+                    "Miles per KwH",
+                    "Registration",
+                    "Cost per Mile",
+                    "Last Serviced Date",
+                    "Mileage",
+                    "Depot Location Latitude",
+                    "Depot Location Longitude",
+                    "Number of Seats");
+            System.out.println("=======   =========   ===============   ===============   =================   =================   ===============   ===================   ===========   ========================   =========================   ===============");
+            for (Vehicle v : vehicles)
+            {
+                System.out.printf("%-10s%-12s%-18s%-18s%-20s%-20s%-18s%-22s%-14s%-27s%-28s%-10s\n",
+                        v.getId(), v.getType(), v.getMake(), v.getModel(), v.getMilesPerKwH(),
+                        v.getRegistration(), v.getCostPerMile(), v.getLastServicedDate(),
+                        v.getMileage(), v.getDepotGPSLocation().getLatitude(), v.getDepotGPSLocation().getLongitude(),
+                        ((Car) v).getNumOfSeats());
             }
         }
+        else {
+            System.out.println("Vehicle not found");
+        }
+    }
 
-        return list;
+    public List<Vehicle> filterBy(IFilter filter) {
+        List<Vehicle> filteredList = new ArrayList<>();
+        for (Vehicle v : this.vehicleList) {
+            if (filter.matches(v))    // use matches() method of the filter to match products
+                filteredList.add(v);
+        }
+
+        return filteredList;
     }
 }

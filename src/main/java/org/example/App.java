@@ -113,13 +113,13 @@ public class App
                         System.out.println("Exit Menu option chosen");
                         break;
                     default:
-                        System.out.print("Invalid option - please enter number in range");
+                        System.out.print("Invalid input - please enter number in range");
                         break;
                 }
 
             } catch (InputMismatchException | NumberFormatException e)
             {
-                System.out.print("Invalid option - please enter number in range");
+                System.out.print("Invalid input - please enter number in range");
             }
         } while (option != EXIT);
 
@@ -178,12 +178,12 @@ public class App
                         System.out.println("Exit Menu option chosen");
                         break;
                     default:
-                        System.out.print("Invalid option - please enter number in range");
+                        System.out.print("Invalid input - please enter number in range");
                         break;
                 }
             } catch (InputMismatchException | NumberFormatException e)
             {
-                System.out.print("Invalid option - please enter number in range");
+                System.out.print("Invalid input - please enter number in range");
             }
         } while (option != EXIT);
 
@@ -222,12 +222,12 @@ public class App
                         System.out.println("Exit Menu option chosen");
                         break;
                     default:
-                        System.out.print("Invalid option - please enter number in range");
+                        System.out.print("Invalid input - please enter number in range");
                         break;
                 }
             } catch (InputMismatchException | NumberFormatException e)
             {
-                System.out.print("Invalid option - please enter number in range");
+                System.out.print("Invalid input - please enter number in range");
             }
         } while (option != EXIT);
     }
@@ -239,7 +239,7 @@ public class App
         {
             final String MENU_ITEMS = "\n*** VEHICLE MENU ***\n"
                     + "1. Show all vehicles\n"
-                    + "2. Find vehicle\n"
+                    + "2. Find vehicle options\n"
                     + "3. Exit\n"
                     + "Enter Option [1,3]";
 
@@ -260,9 +260,7 @@ public class App
                     {
                         case SHOW_ALL_VEHICLE:
                             System.out.println("\nDisplay ALL Vehicles");
-                            List<Vehicle> allVehicles = vehicleManager.getVehicleList();
-                            for (Vehicle vehicle : allVehicles)
-                                System.out.println(vehicle);
+                            bookingManager.displayAllVehicles();
                             break;
                         case FIND_VEHICLE:
                             findVehicleMenuOption();
@@ -271,13 +269,13 @@ public class App
                             System.out.println("Exit Menu option chosen");
                             break;
                         default:
-                            System.out.print("Invalid option - please enter number in range");
+                            System.out.print("Invalid input - please enter number in range");
                             break;
                     }
 
                 } catch (InputMismatchException | NumberFormatException e)
                 {
-                    System.out.print("Invalid option - please enter number in range");
+                    System.out.print("Invalid input - please enter number in range");
                 }
             } while (option != EXIT);
 
@@ -286,16 +284,18 @@ public class App
 
         private void findVehicleMenuOption() {
             final String MENU_ITEMS = "\n*** FIND VEHICLE MENU ***\n"
-                    + "1. Find Vehicle by Registration\n"
-                    + "2. Find Vehicle by Type\n"
-                    + "3. Find Vehicle by Number of Seats\n"
-                    + "4. Exit\n"
-                    + "Enter Option [1,4]";
+                    + "1. Find Vehicle by ID\n"
+                    + "2. Find Vehicle by Registration\n"
+                    + "3. Find Vehicle by Type\n"
+                    + "4. Find Vehicle by Number of Seats\n"
+                    + "5. Exit\n"
+                    + "Enter Option [1,5]";
 
-            final int FIND_BY_REG = 1;
-            final int FIND_BY_TYPE = 2;
-            final int FIND_BY_NUMOFSEATS = 3;
-            final int EXIT = 4;
+            final int FIND_BY_ID = 1;
+            final int FIND_BY_REG = 2;
+            final int FIND_BY_TYPE = 3;
+            final int FIND_BY_NUMOFSEATS = 4;
+            final int EXIT = 5;
 
             Scanner keyboard = new Scanner(System.in);
             int option = 0;
@@ -308,6 +308,9 @@ public class App
                     option = Integer.parseInt(usersInput);
                     switch (option)
                     {
+                        case FIND_BY_ID:
+                            findVehicleByIdOption();
+                            break;
                         case FIND_BY_REG:
                             findVehicleByRegistrationOption();
                             break;
@@ -321,13 +324,13 @@ public class App
                             System.out.println("Exit Menu option chosen");
                             break;
                         default:
-                            System.out.print("Invalid option - please enter number in range");
+                            System.out.print("Invalid input - please enter number in range");
                             break;
                     }
 
                 } catch (InputMismatchException | NumberFormatException e)
                 {
-                    System.out.print("Invalid option - please enter number in range");
+                    System.out.print("Invalid input - please enter number in range");
                 }
             } while (option != EXIT);
         }
@@ -383,13 +386,13 @@ public class App
                             System.out.println("Exit Menu option chosen");
                             break;
                         default:
-                            System.out.print("Invalid option - please enter number in range");
+                            System.out.print("Invalid input - please enter number in range");
                             break;
                     }
 
                 } catch (InputMismatchException | NumberFormatException e)
                 {
-                    System.out.print("Invalid option - please enter number in range");
+                    System.out.print("Invalid input - please enter number in range");
                 }
             } while (option != EXIT);
 
@@ -403,14 +406,16 @@ public class App
                     + "2. Show Bookings by Passenger ID\n"
                     + "3. Show Bookings by Passenger Name\n"
                     + "4. Show Bookings by Booking ID\n"
-                    + "5. Exit\n"
-                    + "Enter Option [1,5]";
+                    + "5. Show current Bookings\n"
+                    + "6. Exit\n"
+                    + "Enter Option [1,6]";
 
             final int SHOW_ALL_BOOKING = 1;
             final int SHOW_BOOKING_PASSENGER_ID = 2;
             final int SHOW_BOOKING_PASSENGER_NAME = 3;
             final int SHOW_BOOKING_BOOKING_ID = 4;
-            final int EXIT = 5;
+            final int SHOW_CURRENT_BOOKINGS = 5;
+            final int EXIT = 6;
 
             Scanner keyboard = new Scanner(System.in);
             int option = 0;
@@ -436,17 +441,21 @@ public class App
                         case SHOW_BOOKING_BOOKING_ID:
                             displayBookingByBookingIdOption();
                             break;
+                        case SHOW_CURRENT_BOOKINGS:
+                            System.out.println("Display Current Bookings");
+                            bookingManager.displayCurrentBookings();
+                            break;
                         case EXIT:
                             System.out.println("Exit Menu option chosen");
                             break;
                         default:
-                            System.out.print("Invalid option - please enter number in range");
+                            System.out.print("Invalid input - please enter number in range");
                             break;
                     }
 
                 } catch (InputMismatchException | NumberFormatException e)
                 {
-                    System.out.print("Invalid option - please enter number in range");
+                    System.out.print("Invalid input - please enter number in range");
                 }
             } while (option != EXIT);
         }
@@ -474,7 +483,7 @@ public class App
             System.out.println("Enter passenger name:");
             String name = keyboard.nextLine();
 
-            while (!name.matches("^[A-Za-z ]+$")) {
+            while (!name.matches("^[A-Za-z' ]+$")) {
                 System.out.println("Invalid name");
                 System.out.println("Enter passenger name:");
                 name = keyboard.nextLine();
@@ -603,13 +612,13 @@ public class App
                             System.out.println("Exit Menu option chosen");
                             break;
                         default:
-                            System.out.print("Invalid option - please enter number in range");
+                            System.out.print("Invalid input - please enter number in range");
                             break;
                     }
 
                 } catch (InputMismatchException | NumberFormatException e)
                 {
-                    System.out.print("Invalid option - please enter number in range");
+                    System.out.print("Invalid input - please enter number in range");
                 }
             } while (option != EXIT);
 
@@ -622,7 +631,7 @@ public class App
 
             System.out.println("Enter new name:");
             String name = keyboard.nextLine();
-            while (!name.matches("^[A-Za-z ]+$")) {
+            while (!name.matches("^[A-Za-z' ]+$")) {
                 System.out.println("Invalid name");
                 System.out.println("Enter passenger name:");
                 name = keyboard.nextLine();
@@ -655,7 +664,7 @@ public class App
             System.out.println("\nEdit passenger name");
             System.out.println("Enter new name:");
             String name = keyboard.nextLine();
-            while (!name.matches("^[A-Za-z ]+$")) {
+            while (!name.matches("^[A-Za-z' ]+$")) {
                 System.out.println("Invalid name");
                 System.out.println("Enter new name:");
                 name = keyboard.nextLine();
@@ -709,17 +718,22 @@ public class App
          *  Vehicle options
          */
 
+        private void findVehicleByIdOption()
+        {
+            Scanner keyboard = new Scanner(System.in);
+            System.out.println("\nDisplay Vehicle by ID");
+            System.out.println("Enter vehicle ID:");
+            int id = keyboard.nextInt();
+            bookingManager.displayVehicleById(id);
+        }
+
         private void findVehicleByRegistrationOption()
         {
             Scanner keyboard = new Scanner(System.in);
             System.out.println("\nDisplay Vehicle by Registration");
             System.out.println("Enter vehicle registration:");
             String reg = keyboard.nextLine();
-            Vehicle v = bookingManager.findVehicleByRegistration(reg);
-            if (v == null)
-                System.out.println("\nNo vehicle matching the registration \"" + reg + "\"");
-            else
-                System.out.println("\nFound vehicle: \n" + v);
+            bookingManager.displayVehicleByRegistration(reg);
         }
 
         private void findVehicleByTypeOption()
@@ -728,17 +742,7 @@ public class App
             System.out.println("\nDisplay Vehicle by Type");
             System.out.println("Enter vehicle type:");
             String type = keyboard.nextLine();
-            List<Vehicle> vList = bookingManager.findVehiclesByType(type);
-            if (vList.isEmpty())
-            {
-                System.out.println("\nNo vehicle with type \"" + type + "\"");
-            }
-            else
-            {
-                System.out.println("\n" + type + "(s) found: ");
-                for (Vehicle vehicle : vList)
-                    System.out.println(vehicle);
-            }
+            bookingManager.displayVehiclesByType(type);
         }
 
         private void findVehiclesByNumOfSeatsOption()
@@ -747,17 +751,7 @@ public class App
             System.out.println("\nDisplay Vehicle by Number of Seats");
             System.out.println("Enter vehicle number of seats:");
             int numOfSeats = keyboard.nextInt();
-            List<Vehicle> vList = bookingManager.findVehiclesByNumOfSeats(numOfSeats);
-            if (vList.isEmpty())
-            {
-                System.out.println("\nNo vehicle with " + numOfSeats + " seats");
-            }
-            else
-            {
-                System.out.println("\nVehicles with " + numOfSeats + " seats found:");
-                for (Vehicle vehicle : vList)
-                    System.out.println(vehicle);
-            }
+            bookingManager.displayVehiclesByNumOfSeats(numOfSeats);
         }
 
         /*
@@ -772,10 +766,11 @@ public class App
                 System.out.println("\nMaking new booking\n");
 
                 System.out.println("Vehicles List:");
-                bookingManager.displayAllVehicleIdTypeMakeModel();
+                bookingManager.displayAllVehicles();
                 System.out.println("Enter Vehicle ID:");
                 int vehicleId = keyboard.nextInt();
 
+                bookingManager.displayAllPassengers();
                 System.out.println("Enter Passenger ID:");
                 int passengerId = keyboard.nextInt();
 
@@ -950,13 +945,13 @@ public class App
                             System.out.println("Exit Menu option chosen");
                             break;
                         default:
-                            System.out.print("Invalid option - please enter number in range");
+                            System.out.print("Invalid input - please enter number in range");
                             break;
                     }
 
                 } catch (InputMismatchException | NumberFormatException e)
                 {
-                    System.out.print("Invalid option - please enter number in range");
+                    System.out.print("Invalid input - please enter number in range");
                 }
             } while (option != EXIT);
         }

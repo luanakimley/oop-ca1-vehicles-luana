@@ -232,15 +232,6 @@ public class AppTest
         assertEquals(1001, b.getBookingId());
     }
 
-    @Test
-    public void calculateAverageBookingLengthTest()
-    {
-        System.out.println("Calculate Average Booking Length Test");
-
-        double average = bookingManager.calculateAverageLengthOfBookingJourneys();
-
-        assertEquals(1180.55 , average, 0.01);
-    }
 
     @Test
     public void deleteBookingByIdTest()
