@@ -227,9 +227,9 @@ public class AppTest
     {
         System.out.println("Find Booking by ID Test");
 
-        Booking b = bookingManager.findBookingById(1001);
+        Booking b = bookingManager.findBookingById(1004);
 
-        assertEquals(1001, b.getBookingId());
+        assertEquals(1004, b.getBookingId());
     }
 
 
@@ -240,7 +240,7 @@ public class AppTest
 
         int prevSize = bookingManager.getBookingList().size();
 
-        bookingManager.deleteBookingById(1001);
+        bookingManager.deleteBookingById(1004);
 
         assertEquals(prevSize-1, bookingManager.getBookingList().size());
     }

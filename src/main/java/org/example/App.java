@@ -1,6 +1,7 @@
 package org.example;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -478,11 +479,7 @@ public class App
             System.out.println("\nFind Passenger by Name");
             System.out.println("Enter passenger name:");
             String name = keyboard.nextLine();
-            Passenger p = bookingManager.findPassengerByName(name);
-            if (p == null)
-                System.out.println("No passenger matching the name \"" + name + "\"");
-            else
-                System.out.println("Found passenger: \n" + p);
+            bookingManager.displayPassengerByName(name);
         }
 
         private void addPassengerOption() {
@@ -518,9 +515,19 @@ public class App
 
             System.out.println("Enter home location latitude:");
             double latitude = keyboard.nextDouble();
+            while (latitude < -90 || latitude > 90) {
+                System.out.println("Invalid latitude");
+                System.out.println("Enter home location latitude:");
+                latitude = keyboard.nextDouble();
+            }
 
             System.out.println("Enter home location longitude:");
             double longitude = keyboard.nextDouble();
+            while (longitude < -180 || longitude > 90) {
+                System.out.println("Invalid longitude");
+                System.out.println("Enter home location longitude:");
+                longitude = keyboard.nextDouble();
+            }
 
             bookingManager.addPassenger(name, email, phone, latitude, longitude);
 
@@ -660,10 +667,21 @@ public class App
                 System.out.println("Enter passenger phone number:");
                 phone = keyboard.nextLine();
             }
-            System.out.println("Enter new location latitude:");
+            System.out.println("Enter new home location latitude:");
             double latitude = keyboard.nextDouble();
-            System.out.println("Enter new location longitude:");
+            while (latitude < -90 || latitude > 90) {
+                System.out.println("Invalid latitude");
+                System.out.println("Enter home location latitude:");
+                latitude = keyboard.nextDouble();
+            }
+
+            System.out.println("Enter new home location longitude:");
             double longitude = keyboard.nextDouble();
+            while (longitude < -180 || longitude > 90) {
+                System.out.println("Invalid longitude");
+                System.out.println("Enter home location longitude:");
+                longitude = keyboard.nextDouble();
+            }
 
             bookingManager.editAllPassengerDetails(id, name, email, phone, latitude, longitude);
         }
@@ -717,9 +735,20 @@ public class App
             Scanner keyboard = new Scanner(System.in);
 
             System.out.println("\nEdit passenger location");
-            System.out.println("Enter new latitude:");
+            System.out.println("Enter new home location latitude:");
             double latitude = keyboard.nextDouble();
+            while (latitude < -90 || latitude > 90) {
+                System.out.println("Invalid latitude");
+                System.out.println("Enter home location latitude:");
+                latitude = keyboard.nextDouble();
+            }
+            System.out.println("Enter new home location longitude:");
             double longitude = keyboard.nextDouble();
+            while (longitude < -180 || longitude > 90) {
+                System.out.println("Invalid longitude");
+                System.out.println("Enter home location longitude:");
+                longitude = keyboard.nextDouble();
+            }
 
             bookingManager.editPassengerLocation(id, latitude, longitude);
         }
@@ -802,30 +831,75 @@ public class App
 
                 System.out.println("Enter date of booking:");
                 int date = keyboard.nextInt();
+                while (date < 1 || date > 31) {
+                    System.out.println("Invalid date input");
+                    System.out.println("Enter date of booking:");
+                    date = keyboard.nextInt();
+                }
 
                 System.out.println("Enter month of booking (1-12):");
                 int month = keyboard.nextInt();
+                while (month < 1 || month > 12) {
+                    System.out.println("Invalid month input");
+                    System.out.println("Enter month of booking (1-12):");
+                    month = keyboard.nextInt();
+                }
 
                 System.out.println("Enter year of booking:");
                 int year = keyboard.nextInt();
+                while (year < LocalDateTime.now().getYear()) {
+                    System.out.println("Invalid year input");
+                    System.out.println("Enter year of booking:");
+                    year = keyboard.nextInt();
+                }
 
-                System.out.println("Enter hour of booking (0-23)");
+                System.out.println("Enter hour of booking (0-23):");
                 int hour = keyboard.nextInt();
+                while (hour < 0 || hour > 23) {
+                    System.out.println("Invalid hour input");
+                    System.out.println("Enter hour of booking (0-23):");
+                    hour = keyboard.nextInt();
+                }
 
-                System.out.println("Enter minute of booking (0-59)");
+                System.out.println("Enter minute of booking (0-59):");
                 int minute = keyboard.nextInt();
+                while (minute < 0 || minute > 59) {
+                    System.out.println("Invalid minute input");
+                    System.out.println("Enter minute of booking (0-59):");
+                    minute = keyboard.nextInt();
+                }
 
                 System.out.println("Enter start location latitude:");
                 double startLat = keyboard.nextDouble();
+                while (startLat < -90 || startLat > 90) {
+                    System.out.println("Invalid latitude input");
+                    System.out.println("Enter start location latitude:");
+                    startLat = keyboard.nextDouble();
+                }
 
                 System.out.println("Enter start location longitude:");
                 double startLong = keyboard.nextDouble();
+                while (startLong < -180 || startLong > 180) {
+                    System.out.println("Invalid longitude input");
+                    System.out.println("Enter start location longitude:");
+                    startLong = keyboard.nextDouble();
+                }
 
                 System.out.println("Enter end location latitude:");
                 double endLat = keyboard.nextDouble();
+                while (endLat < -90 || endLat > 90) {
+                    System.out.println("Invalid latitude input");
+                    System.out.println("Enter end location latitude:");
+                    endLat = keyboard.nextDouble();
+                }
 
                 System.out.println("Enter end location longitude:");
                 double endLong = keyboard.nextDouble();
+                while (endLong < -180 || endLong > 180) {
+                    System.out.println("Invalid longitude input");
+                    System.out.println("Enter end location longitude:");
+                    endLong = keyboard.nextDouble();
+                }
 
                 Booking newBooking = bookingManager.makeBooking(passengerId, vehicleId, year, month, date, hour, minute, startLat, startLong, endLat, endLong);
                 if (newBooking != null) {
@@ -987,38 +1061,83 @@ public class App
 
             System.out.println("\nEdit all booking details");
 
-            System.out.println("Enter Passenger ID:");
+            System.out.println("Enter new Passenger ID:");
             int passengerId = keyboard.nextInt();
 
-            System.out.println("Enter Vehicle ID:");
+            System.out.println("Enter new Vehicle ID:");
             int vehicleId = keyboard.nextInt();
 
-            System.out.println("Enter date of booking:");
+            System.out.println("Enter new date of booking:");
             int date = keyboard.nextInt();
+            while (date < 1 || date > 31) {
+                System.out.println("Invalid date input");
+                System.out.println("Enter new date of booking:");
+                date = keyboard.nextInt();
+            }
 
-            System.out.println("Enter month of booking (1-12):");
+            System.out.println("Enter new month of booking (1-12):");
             int month = keyboard.nextInt();
+            while (month < 1 || month > 12) {
+                System.out.println("Invalid month input");
+                System.out.println("Enter new month of booking (1-12):");
+                month = keyboard.nextInt();
+            }
 
-            System.out.println("Enter year of booking:");
+            System.out.println("Enter new year of booking:");
             int year = keyboard.nextInt();
+            while (year < LocalDateTime.now().getYear()) {
+                System.out.println("Invalid year input");
+                System.out.println("Enter new year of booking:");
+                year = keyboard.nextInt();
+            }
 
-            System.out.println("Enter hour of booking (0-23)");
+            System.out.println("Enter new hour of booking (0-23):");
             int hour = keyboard.nextInt();
+            while (hour < 0 || hour > 23) {
+                System.out.println("Invalid hour input");
+                System.out.println("Enter new hour of booking (0-23):");
+                hour = keyboard.nextInt();
+            }
 
-            System.out.println("Enter minute of booking (0-59)");
+            System.out.println("Enter new minute of booking (0-59):");
             int minute = keyboard.nextInt();
+            while (minute < 0 || minute > 59) {
+                System.out.println("Invalid minute input");
+                System.out.println("Enter new minute of booking (0-59):");
+                minute = keyboard.nextInt();
+            }
 
-            System.out.println("Enter start location latitude:");
+            System.out.println("Enter new start location latitude:");
             double startLat = keyboard.nextDouble();
+            while (startLat < -90 || startLat > 90) {
+                System.out.println("Invalid latitude input");
+                System.out.println("Enter new start location latitude:");
+                startLat = keyboard.nextDouble();
+            }
 
-            System.out.println("Enter start location longitude:");
+            System.out.println("Enter new start location longitude:");
             double startLong = keyboard.nextDouble();
+            while (startLong < -180 || startLong > 180) {
+                System.out.println("Invalid longitude input");
+                System.out.println("Enter new start location longitude:");
+                startLong = keyboard.nextDouble();
+            }
 
-            System.out.println("Enter end location latitude:");
+            System.out.println("Enter new end location latitude:");
             double endLat = keyboard.nextDouble();
+            while (endLat < -90 || endLat > 90) {
+                System.out.println("Invalid latitude input");
+                System.out.println("Enter new end location latitude:");
+                endLat = keyboard.nextDouble();
+            }
 
-            System.out.println("Enter end location longitude:");
+            System.out.println("Enter new end location longitude:");
             double endLong = keyboard.nextDouble();
+            while (endLong < -180 || endLong > 180) {
+                System.out.println("Invalid longitude input");
+                System.out.println("Enter new end location longitude:");
+                endLong = keyboard.nextDouble();
+            }
 
             bookingManager.editAllBookingDetails(id, passengerId, vehicleId, year, month, date, hour, minute, startLat,startLong, endLat, endLong);
 
@@ -1043,37 +1162,87 @@ public class App
 
         private void editBookingDateTime(int id) {
             Scanner keyboard = new Scanner(System.in);
-            System.out.println("\nEdit booking date time");
             System.out.println("Enter new date of booking:");
             int date = keyboard.nextInt();
+            while (date < 1 || date > 31) {
+                System.out.println("Invalid date input");
+                System.out.println("Enter new date of booking:");
+                date = keyboard.nextInt();
+            }
+
             System.out.println("Enter new month of booking (1-12):");
             int month = keyboard.nextInt();
+            while (month < 1 || month > 12) {
+                System.out.println("Invalid month input");
+                System.out.println("Enter new month of booking (1-12):");
+                month = keyboard.nextInt();
+            }
+
             System.out.println("Enter new year of booking:");
             int year = keyboard.nextInt();
-            System.out.println("Enter new hour of booking (0-23)");
+            while (year < LocalDateTime.now().getYear()) {
+                System.out.println("Invalid year input");
+                System.out.println("Enter new year of booking:");
+                year = keyboard.nextInt();
+            }
+
+            System.out.println("Enter new hour of booking (0-23):");
             int hour = keyboard.nextInt();
-            System.out.println("Enter new minute of booking (0-59)");
+            while (hour < 0 || hour > 23) {
+                System.out.println("Invalid hour input");
+                System.out.println("Enter new hour of booking (0-23):");
+                hour = keyboard.nextInt();
+            }
+
+            System.out.println("Enter new minute of booking (0-59):");
             int minute = keyboard.nextInt();
+            while (minute < 0 || minute > 59) {
+                System.out.println("Invalid minute input");
+                System.out.println("Enter new minute of booking (0-59):");
+                minute = keyboard.nextInt();
+            }
             bookingManager.editBookingDateTime(id, year, month, date, hour, minute);
         }
 
         private void editBookingStartLocation(int id) {
             Scanner keyboard = new Scanner(System.in);
             System.out.println("\nEdit booking start location");
-            System.out.println("Enter new start latitude:");
+            System.out.println("Enter new start location latitude:");
             double startLat = keyboard.nextDouble();
-            System.out.println("Enter new start longitude:");
+            while (startLat < -90 || startLat > 90) {
+                System.out.println("Invalid latitude input");
+                System.out.println("Enter new start location latitude:");
+                startLat = keyboard.nextDouble();
+            }
+
+            System.out.println("Enter new start location longitude:");
             double startLong = keyboard.nextDouble();
+            while (startLong < -180 || startLong > 180) {
+                System.out.println("Invalid longitude input");
+                System.out.println("Enter new start location longitude:");
+                startLong = keyboard.nextDouble();
+            }
             bookingManager.editBookingStartLocation(id, startLat, startLong);
         }
 
         private void editBookingEndLocation(int id) {
             Scanner keyboard = new Scanner(System.in);
             System.out.println("\nEdit booking end location");
-            System.out.println("Enter new end latitude:");
+            System.out.println("Enter new end location latitude:");
             double endLat = keyboard.nextDouble();
-            System.out.println("Enter new end longitude:");
+            while (endLat < -90 || endLat > 90) {
+                System.out.println("Invalid latitude input");
+                System.out.println("Enter new end location latitude:");
+                endLat = keyboard.nextDouble();
+            }
+
+            System.out.println("Enter new end location longitude:");
             double endLong = keyboard.nextDouble();
+            while (endLong < -180 || endLong > 180) {
+                System.out.println("Invalid longitude input");
+                System.out.println("Enter new end location longitude:");
+                endLong = keyboard.nextDouble();
+            }
             bookingManager.editBookingEndLocation(id, endLat, endLong);
         }
 

@@ -133,6 +133,26 @@ public class PassengerStore implements Serializable
         );
     }
 
+    public void displayPassengerByName(String name) {
+        Passenger foundPassenger = findPassengerByName(name);
+        if (foundPassenger!=null)
+        {
+            System.out.printf("%-8s%-28s%-36s%-24s%-20s%-1s\n", "ID", "Name", "Email", "Phone", "Home Latitude", "Home Longitude");
+            System.out.println("====    ========================    ================================    ====================    ================    ===============");
+            System.out.printf("%-8s%-28s%-36s%-24s%-20s%-1s\n",
+                    foundPassenger.getId(),
+                    foundPassenger.getName(),
+                    foundPassenger.getEmail(),
+                    foundPassenger.getPhone(),
+                    foundPassenger.getLocation().getLatitude(),
+                    foundPassenger.getLocation().getLongitude()
+            );
+        }
+        else {
+            System.out.println("Passenger not found");
+        }
+    }
+
     // Edit Methods
 
     public void editAllPassengerDetails(int id, String name, String email, String phone,
@@ -182,7 +202,7 @@ public class PassengerStore implements Serializable
         }
         else
         {
-            foundPassenger.setName(email);
+            foundPassenger.setEmail(email);
             System.out.println("Passenger edited, here is your updated passenger details:");
             displayPassengerById(id);
         }

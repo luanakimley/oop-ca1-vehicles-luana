@@ -524,7 +524,6 @@ public class BookingManager implements Serializable
         vehicleManager.displayVehicleById(id);
     }
 
-
     public void displayVehicleByRegistration(String reg) {
         vehicleManager.displayVehicleByRegistration(reg);
     }
@@ -559,7 +558,9 @@ public class BookingManager implements Serializable
         passengerStore.displayPassengerById(id);
     }
 
-
+    public void displayPassengerByName(String name) {
+        passengerStore.displayPassengerByName(name);
+    }
 
 
     public void editAllPassengerDetails(int id, String name, String email, String phone,
