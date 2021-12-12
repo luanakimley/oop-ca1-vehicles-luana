@@ -32,6 +32,7 @@ public class App
     PassengerStore passengerStore;  // encapsulates access to list of Passengers
     VehicleManager vehicleManager;  // encapsulates access to list of Vehicles
     BookingManager bookingManager;  // deals with all bookings
+    EmailManager emailManager;
 
     public static void main(String[] args)
     {
@@ -50,6 +51,8 @@ public class App
         // Create BookingManager and load all bookings from file
         bookingManager = new BookingManager(vehicleManager, passengerStore, "bookings.txt");
 
+        // Create EmailManager
+        emailManager = new EmailManager(bookingManager);
 
         try
         {
@@ -914,10 +917,8 @@ public class App
                     }
                     if (ans.equalsIgnoreCase("y"))
                     {
-                        Email email = new Email(bookingManager.findPassengerById(passengerId).getEmail());
-                        email.constructEmail(newBooking);
+                        emailManager.constructEmail(newBooking);
                         System.out.println("\nEmail sent.");
-                        System.out.println(email);
                     }
                     if (ans.equalsIgnoreCase("n"))
                     {
